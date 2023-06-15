@@ -77,10 +77,10 @@ const LoginScreen = () => {
   });
   const navigation = useNavigation();
   const onSubmit = (data: any) => {
-    navigation.navigate(Screens.AuthenticatedNavigator as never);
+    // navigation.navigate(Screens.AuthenticatedNavigator as never);
 
-    // handleLogin(data?.email, data?.password);
-    // console.log(data);
+    handleLogin(data?.email, data?.password);
+    console.log(data);
 
     // console.log(data)
     // showToast.show({ title: 'xsxs', placement: 'top', duration: 3000, render: () => <Toast type='success' message='Đăng ký thành công' /> })

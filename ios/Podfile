@@ -28,7 +28,7 @@ end
 
 target 'PandaKid' do
   config = use_native_modules!
-  
+   pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
   # Flags change depending on the env values.
   flags = get_default_flags()
 

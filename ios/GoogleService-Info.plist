@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>793184218248-f1rqdn1tl6t20bj9ol8t02v5uhnkbjbh.apps.googleusercontent.com</string>
+	<string>99534190315-2ik7m8hg5lt7pecu5jl0s2ftvpnjf985.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.793184218248-f1rqdn1tl6t20bj9ol8t02v5uhnkbjbh</string>
+	<string>com.googleusercontent.apps.99534190315-2ik7m8hg5lt7pecu5jl0s2ftvpnjf985</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA7epfNMr-P4s88bt4_iKb0eYiikV1Zb5U</string>
+	<string>AIzaSyA0Op9VghvIoxOR69WY77MdQ06Rn9BmieI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>793184218248</string>
+	<string>99534190315</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.reactjs.native.example.PandaKid</string>
 	<key>PROJECT_ID</key>
-	<string>pandakid-606e3</string>
+	<string>panda-kid-mobile-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>pandakid-606e3.appspot.com</string>
+	<string>panda-kid-mobile-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:793184218248:ios:9e67f583f6204f2894433d</string>
+	<string>1:99534190315:ios:e9753bc473598ab85170ae</string>
 </dict>
 </plist>

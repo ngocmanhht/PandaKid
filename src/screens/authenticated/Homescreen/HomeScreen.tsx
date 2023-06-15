@@ -16,17 +16,35 @@ import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import SearchInput from '../../../components/search-input';
 import { Icon } from '../../../assets/icons/const';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeScreen = () => {
-  const data = [
-    { id: 1, title: 'test1' },
-    { id: 2, title: 'test2' },
-    { id: 3, title: 'test3' },
-    { id: 4, title: 'test4' },
-    { id: 5, title: 'test5' },
-    { id: 6, title: 'test6' },
-    { id: 7, title: 'test7' },
-  ];
+  // const data = [
+  //   { id: 1, title: 'test1' },
+  //   { id: 2, title: 'test2' },
+  //   { id: 3, title: 'test3' },
+  //   { id: 4, title: 'test4' },
+  //   { id: 5, title: 'test5' },
+  //   { id: 6, title: 'test6' },
+  //   { id: 7, title: 'test7' },
+  // ];
+  const [data, setData] = React.useState<any>([]);
+  React.useEffect(() => {
+    firestore()
+      .collection('Category')
+      .onSnapshot((querySnapshot) => {
+        const users: any = [];
+
+        querySnapshot.forEach((documentSnapshot) => {
+          users.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setData(users);
+        // console.log(users);
+      });
+  }, []);
   const navigation = useNavigation();
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -69,7 +87,7 @@ const HomeScreen = () => {
                 }
                 activeOpacity={0.2}
               >
-                <BigCard title={item?.title} backgroundColor={randomColor()} />
+                <BigCard title={item?.key} backgroundColor={randomColor()} />
               </TouchableOpacity>
             );
           }}
