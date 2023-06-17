@@ -21,21 +21,19 @@ import LongButton from '../../../components/Button/LongButton';
 import Toast from '../../../components/Toast/Toast';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
+import UIStore from '../../../stores/ui';
+import useStores from '../../../hooks/use-stores';
 
 const LoginScreen = () => {
   const [value, setvalue] = React.useState('');
   const showToast = useToast();
-
+  const uiStore: UIStore = useStores().uiStore;
   const handleLogin = (email: string, password: any) => {
-    // console.log(newEmail);
-
     auth()
-      // .signInWithEmailAndPassword('doananhngoc5666@gmail.com','123456')
       .signInWithEmailAndPassword(email, password)
-
       .then((e) => {
         if (e.user) {
-          // console.log('LoginSuccess')
+          uiStore.hideLoading();
           showToast.show({
             title: 'xsxs',
             placement: 'top',
@@ -46,7 +44,8 @@ const LoginScreen = () => {
           });
           navigation.navigate(Screens.AuthenticatedNavigator as never);
         } else {
-          // console.log('LoginFailure')
+          uiStore.hideLoading();
+
           showToast.show({
             title: 'xsxs',
             placement: 'top',
@@ -57,6 +56,7 @@ const LoginScreen = () => {
       })
       .catch((err) => {
         console.log(err);
+        uiStore.hideLoading();
         showToast.show({
           title: 'xsxs',
           placement: 'top',
@@ -77,13 +77,9 @@ const LoginScreen = () => {
   });
   const navigation = useNavigation();
   const onSubmit = (data: any) => {
-    // navigation.navigate(Screens.AuthenticatedNavigator as never);
-
+    uiStore.showLoading();
     handleLogin(data?.email, data?.password);
     console.log(data);
-
-    // console.log(data)
-    // showToast.show({ title: 'xsxs', placement: 'top', duration: 3000, render: () => <Toast type='success' message='Đăng ký thành công' /> })
   };
   return (
     <ImageBackground

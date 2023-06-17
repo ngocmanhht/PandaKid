@@ -14,7 +14,6 @@ const SearchInput = () => {
         borderRadius={sizeWidth(4)}
         space={4}
         paddingLeft={3}
-        h={sizeHeight(5)}
       >
         <Image
           source={Icon.search}

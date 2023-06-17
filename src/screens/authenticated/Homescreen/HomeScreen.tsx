@@ -1,35 +1,25 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
 import Header from '../../../components/header';
 import BigCard from '../../../components/Card/big-card';
-import { HStack, VStack } from 'native-base';
+import { VStack } from 'native-base';
 import { randomColor, sizeHeight, sizeWidth } from '../../../utils/Utils';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import SearchInput from '../../../components/search-input';
 import { Icon } from '../../../assets/icons/const';
 import firestore from '@react-native-firebase/firestore';
+import { AnyIfEmpty } from 'react-redux';
+import UIStore from '../../../stores/ui';
+import useStores from '../../../hooks/use-stores';
 
 const HomeScreen = () => {
-  // const data = [
-  //   { id: 1, title: 'test1' },
-  //   { id: 2, title: 'test2' },
-  //   { id: 3, title: 'test3' },
-  //   { id: 4, title: 'test4' },
-  //   { id: 5, title: 'test5' },
-  //   { id: 6, title: 'test6' },
-  //   { id: 7, title: 'test7' },
-  // ];
+  const uiStore: UIStore = useStores().uiStore;
   const [data, setData] = React.useState<any>([]);
   React.useEffect(() => {
+    uiStore.showLoading();
     firestore()
       .collection('Category')
       .onSnapshot((querySnapshot) => {
@@ -42,10 +32,12 @@ const HomeScreen = () => {
           });
         });
         setData(users);
+        uiStore.hideLoading();
         // console.log(users);
       });
   }, []);
   const navigation = useNavigation();
+
   return (
     <Container backgroundSource={images.MainBackground}>
       {/* <Text>sdd</Text> */}
@@ -71,7 +63,7 @@ const HomeScreen = () => {
         <SearchInput />
 
         <FlatList
-          data={data}
+          data={[0, 1, 2, 3, 4]}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           snapToEnd={true}
@@ -82,12 +74,16 @@ const HomeScreen = () => {
                 onPress={() =>
                   navigation.navigate(
                     Screens.WordScreens as never,
-                    { title: item?.title, color: randomColor() } as any
+                    { title: item?.key, color: randomColor() } as any
                   )
                 }
                 activeOpacity={0.2}
               >
-                <BigCard title={item?.key} backgroundColor={randomColor()} />
+                <BigCard
+                  source={{ uri: item?.url }}
+                  title={item?.key}
+                  backgroundColor={randomColor()}
+                />
               </TouchableOpacity>
             );
           }}

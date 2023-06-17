@@ -20,6 +20,7 @@ const WordModal = ({
   index?: number;
   onIndexChange?: (e: any) => void;
 }) => {
+  const [indexs, setIndex] = React.useState(0);
   return (
     <Modal
       style={{
@@ -64,7 +65,7 @@ const WordModal = ({
           onIndexChanged={onIndexChange}
           showsButtons={true}
         >
-          {data?.map((item) => {
+          {data?.map((item, index) => {
             return (
               <VStack
                 space={3}
@@ -75,17 +76,17 @@ const WordModal = ({
                 }}
               >
                 <Text style={{ fontSize: fontSize(4), fontWeight: '600' }}>
-                  {item?.title}
+                  {item?.key}
                 </Text>
 
                 <Image
-                  source={images.Test}
+                  source={{ uri: item?.url }}
                   style={{
                     borderRadius: sizeWidth(3),
                     width: sizeWidth(60),
                     height: sizeHeight(30),
                   }}
-                  resizeMode='cover'
+                  resizeMode='contain'
                 />
                 <TouchableOpacity>
                   <Image

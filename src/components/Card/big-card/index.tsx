@@ -28,7 +28,7 @@ const BigCard = ({
       justifyContent={'center'}
       alignItems={'center'}
       margin={2}
-      borderWidth={3}
+      borderWidth={5}
       borderColor={'white'}
       w={sizeWidth(40)}
       h={sizeHeight(23)}
@@ -38,7 +38,7 @@ const BigCard = ({
     >
       <Image
         source={source || images.Test}
-        style={{ width: '90%', height: '75%', borderRadius: sizeWidth(4) }}
+        style={{ width: '90%', height: '80%', borderRadius: sizeWidth(4) }}
         resizeMode='cover'
       />
       <Text
