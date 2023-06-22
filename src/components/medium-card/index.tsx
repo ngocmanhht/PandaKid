@@ -4,12 +4,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ViewProps,
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import { VStack } from 'native-base';
 import { fontSize, sizeHeight, sizeWidth } from '../../utils/Utils';
 import { images } from '../../assets/images/const';
 
@@ -38,18 +35,22 @@ const MediumCard = ({
           justifyContent: 'center',
           alignItems: 'center',
           borderWidth: 3,
-          margin: sizeHeight(1),
+          margin: sizeHeight(0.5),
           borderColor: 'white',
-          width: '29%',
-          height: sizeHeight(20),
           borderRadius: sizeWidth(4),
           backgroundColor: backgroundColor || '#9CAEFF',
+          padding: 10,
+          paddingVertical: 10,
         },
       ]}
     >
       <Image
         source={source || images.Test}
-        style={{ width: '90%', height: '75%', borderRadius: sizeWidth(4) }}
+        style={{
+          width: sizeWidth(23),
+          height: sizeHeight(12),
+          borderRadius: sizeWidth(4),
+        }}
         resizeMode='cover'
       />
       <Text

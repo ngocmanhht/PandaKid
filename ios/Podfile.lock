@@ -628,6 +628,7 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - BEMCheckBox (1.4.1)
   - boost (1.76.0)
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
@@ -1203,6 +1204,11 @@ PODS:
     - React-perflogger (= 0.71.6)
   - rn-fetch-blob (0.12.0):
     - React-Core
+  - RNCAsyncStorage (1.18.2):
+    - React-Core
+  - RNCCheckbox (0.5.15):
+    - BEMCheckBox (~> 1.4)
+    - React-Core
   - RNFBApp (18.0.0):
     - Firebase/CoreOnly (= 10.10.0)
     - React-Core
@@ -1329,6 +1335,8 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
@@ -1345,6 +1353,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - BEMCheckBox
     - BoringSSL-GRPC
     - CocoaAsyncSocket
     - Firebase
@@ -1449,6 +1458,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCCheckbox:
+    :path: "../node_modules/@react-native-community/checkbox"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -1476,6 +1489,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
+  BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -1541,6 +1555,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: e1067159764444e5db7c14e294d5cd79fb159c59
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
+  RNCCheckbox: 43bcc6493611468af0e19f19f029dab3da8561c4
   RNFBApp: 7da45c10070789f5e4337a5534139976e8d74e0a
   RNFBAuth: c869dede51535402b5ec0d1c2dd1306a7c1954cf
   RNFBFirestore: 396b5ee1086dc847d26edfc7ba11632f6897ca7a

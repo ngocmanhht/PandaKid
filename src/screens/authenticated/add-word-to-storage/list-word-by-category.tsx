@@ -1,17 +1,24 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { VStack } from 'native-base';
+import { Checkbox, VStack } from 'native-base';
 import { fontSize, sizeWidth } from '../../../utils/Utils';
 import MediumCard from '../../../components/medium-card';
 import Card from './card';
 import firestore from '@react-native-firebase/firestore';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
-const ListWordByCate = ({ categoryName }: { categoryName?: string }) => {
+const ListWordByCate = ({
+  categoryName,
+  handleAddItem,
+  handleRemoveItem,
+}: {
+  categoryName?: string;
+  handleAddItem?: (item: any) => void;
+  handleRemoveItem?: (item: any) => void;
+}) => {
   const [data, setData] = React.useState([]);
   const uiStore: UIStore = useStores().uiStore;
-
-  React.useEffect(() => {
+  const getWordByCate = () => {
     uiStore.showLoading();
     firestore()
       .collection('Category')
@@ -31,6 +38,9 @@ const ListWordByCate = ({ categoryName }: { categoryName?: string }) => {
         uiStore.hideLoading();
         // console.log(users);
       });
+  };
+  React.useEffect(() => {
+    getWordByCate();
     return () => {};
   }, []);
   return (
@@ -63,7 +73,17 @@ const ListWordByCate = ({ categoryName }: { categoryName?: string }) => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => {
-          return <Card source={{ uri: item?.url }} wordName={item?.key} />;
+          return (
+            <>
+              <Card
+                source={{ uri: item?.url }}
+                wordName={item?.key}
+                onValueChange={(e) => {
+                  e === true ? handleAddItem(item) : handleRemoveItem(item);
+                }}
+              />
+            </>
+          );
         }}
       />
     </VStack>

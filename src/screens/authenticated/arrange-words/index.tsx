@@ -13,33 +13,45 @@ import Sound from 'react-native-sound';
 import RNFetchBlob from 'rn-fetch-blob';
 import TouchableOpacity from '../../../components/Button/TouchableOpacity';
 import { Icon } from '../../../assets/icons/const';
+import { observer } from 'mobx-react';
+import SessionStore from '../../../stores/session';
+import useStores from '../../../hooks/use-stores';
+import { useIsFocused } from '@react-navigation/native';
 
-const ArrangeWordsScreen = () => {
-  const fakeData = [
-    { id: 1, title: 'Em' },
-    { id: 2, title: 'Ăn' },
-    { id: 3, title: 'Chơi' },
-    { id: 4, title: 'Cơm' },
-    { id: 5, title: 'Đi' },
-    { id: 6, title: 'Hồ Tây' },
-    { id: 7, title: 'Cá' },
-  ];
-  const [data, setData] = React.useState(fakeData);
+const ArrangeWordsScreen = observer(() => {
+  const sessionStore: SessionStore = useStores().sessionStore;
+  const focused = useIsFocused();
+  React.useEffect(() => {
+    if (focused === true) {
+      setData(sessionStore?.storageWords?.storage);
+      setWord([]);
+    }
+
+    return () => {};
+  }, [focused]);
+
+  const [data, setData] = React.useState(sessionStore?.storageWords?.storage);
+
   const [word, setWord] = React.useState([]);
   const [url, setUrl] = React.useState('');
   const [success, setSuccess] = React.useState(true);
   const toast = useCustomToast();
   const handleAdd = (item: any) => {
     if (word.length <= 5) {
-      const newData = data.filter((itemData) => itemData?.id !== item.id);
+      const newData = data.filter(
+        (itemData) => encodeURI(itemData?.key) !== encodeURI(item.key)
+      );
       setData(newData);
       return setWord([...word, item]);
     } else {
       toast.show({ type: 'warn', msg: 'Quá số từ cho phép' });
     }
+    // console.log(item);
   };
   const handleRemove = (item: any) => {
-    const newData = word.filter((itemData) => itemData?.id !== item.id);
+    const newData = word.filter(
+      (itemData) => encodeURI(itemData?.key) !== encodeURI(item?.key)
+    );
     setWord(newData);
     return setData([...data, item]);
   };
@@ -87,7 +99,7 @@ const ArrangeWordsScreen = () => {
     } else {
       let wd = '';
       const words = word.forEach((e) => {
-        wd = wd + ' ' + e?.title;
+        wd = wd + ' ' + e?.key;
       });
       // console.log(wd);
       const urls = await getVoiceUrl(wd);
@@ -109,8 +121,7 @@ const ArrangeWordsScreen = () => {
             flexDirection: 'column',
             borderColor: '#77A4FF',
             backgroundColor: 'white',
-            height: sizeHeight(50),
-            padding: 10,
+            height: sizeHeight(45),
           }}
         >
           <FlatList
@@ -121,7 +132,8 @@ const ArrangeWordsScreen = () => {
               return (
                 <MediumCard
                   onPress={() => handleRemove(item)}
-                  title={item?.title}
+                  title={item?.key}
+                  source={{ uri: item?.url }}
                 />
               );
             }}
@@ -144,7 +156,8 @@ const ArrangeWordsScreen = () => {
             renderItem={({ item, index }) => {
               return (
                 <MediumCard
-                  title={item?.title}
+                  source={{ uri: item?.url }}
+                  title={item?.key}
                   onPress={() => handleAdd(item)}
                 />
               );
@@ -154,6 +167,6 @@ const ArrangeWordsScreen = () => {
       </VStack>
     </Container>
   );
-};
+});
 
 export default ArrangeWordsScreen;

@@ -6,57 +6,39 @@ import Header from '../../../components/header';
 import AddButton from '../../../components/add-buton';
 import { VStack } from 'native-base';
 import MediumCard from '../../../components/medium-card';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import firestore from '@react-native-firebase/firestore';
+import { observer } from 'mobx-react';
+import SessionStore from '../../../stores/session';
+import useStores from '../../../hooks/use-stores';
 
-const StorageWord = () => {
-  const data = [
-    { id: 1, title: 'word1' },
-    { id: 2, title: 'word2' },
-    { id: 3, title: 'word3' },
-    { id: 4, title: 'word4' },
-    { id: 5, title: 'word5' },
-    { id: 6, title: 'word6' },
-    { id: 7, title: 'word7' },
-  ];
+const StorageWord = observer(() => {
+  // const data = [
+  //   { id: 1, title: 'word1' },
+  //   { id: 2, title: 'word2' },
+  //   { id: 3, title: 'word3' },
+  //   { id: 4, title: 'word4' },
+  //   { id: 5, title: 'word5' },
+  //   { id: 6, title: 'word6' },
+  //   { id: 7, title: 'word7' },
+  // ];
+  const focused = useIsFocused();
   const addCollectionToFireBase = () => {
     firestore().collection('userData').add({
       name: 'Ada Lovelace',
       age: 30,
     });
   };
-  const checkIfCollectionExists = () => {
-    // firestore()
-    //   .collection('Category')
-    //   .limit(1)
-    //   .get()
-    //   .then((checkSnapshot) => {
-    //     if (checkSnapshot.size == 0) {
-    //       console.log('No snapshots');
-    //     } else {
-    //       console.log('co');
-    //     }
-    //   });
-    // firestore()
-    //   .collection('userData')
-    //   .doc('userData')
-    //   .get()
-    //   .then((doc) => {
-    //     if (doc.exists) {
-    //       console.log('Exists');
-    //     } else {
-    //       console.log('No documents');
-    //     }
-    //   });
-  };
+  const checkIfCollectionExists = () => {};
   React.useEffect(() => {
-    checkIfCollectionExists();
-    addCollectionToFireBase();
+    focused === true ? setData(sessionStore?.storageWords.storage) : null;
     return () => {};
-  }, []);
+  }, [focused]);
 
   const navigation = useNavigation();
+  const sessionStore: SessionStore = useStores().sessionStore;
+  const [data, setData] = React.useState(sessionStore?.storageWords.storage);
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header visible={false} title='Kho ghép từ' />
@@ -69,14 +51,18 @@ const StorageWord = () => {
           data={data}
           numColumns={3}
           renderItem={({ item, index }) => {
-            return <MediumCard disabled={true} title={item?.title} />;
+            return (
+              <MediumCard
+                source={{ uri: item.url }}
+                disabled={true}
+                title={item?.key}
+              />
+            );
           }}
         />
       </VStack>
     </Container>
   );
-};
+});
 
 export default StorageWord;
-
-const styles = StyleSheet.create({});

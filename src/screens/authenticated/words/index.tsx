@@ -45,7 +45,7 @@ const WordScreen = () => {
         });
         setData(users);
         uiStore.hideLoading();
-        // console.log(users);
+        console.log(users);
       });
     return () => {};
   }, []);
