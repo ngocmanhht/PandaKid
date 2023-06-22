@@ -34,6 +34,7 @@ const LoginScreen = () => {
       .then((e) => {
         if (e.user) {
           uiStore.hideLoading();
+          console.log(e);
           showToast.show({
             title: 'xsxs',
             placement: 'top',

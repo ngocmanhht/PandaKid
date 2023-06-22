@@ -77,8 +77,9 @@ const AddCategory = () => {
                       ? 'black'
                       : 'white',
                   }}
-                  title={item?.title}
+                  title={item?.key}
                   backgroundColor={randomColors}
+                  source={{ uri: item?.url }}
                 />
               </TouchableOpacity>
             );

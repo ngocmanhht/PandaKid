@@ -17,6 +17,7 @@ const Card = ({ source, wordName }: { source?: any; wordName?: string }) => {
         backgroundColor: '#9CAEFF',
         borderRadius: sizeWidth(4),
         alignItems: 'center',
+        paddingVertical: 10,
       }}
     >
       <Image

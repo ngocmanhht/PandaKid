@@ -24,6 +24,7 @@ export const Icon = {
   delete: require('./delete.png'),
   done: require('./done.png'),
   play: require('./play.png'),
+  pause: require('./pause.png'),
   cameraOptions: require('./camera-option.png'),
   libraryOptions: require('./library-option.png'),
 };

@@ -6,7 +6,11 @@ import { TextInput } from 'react-native';
 import { Image } from 'react-native';
 import { Icon } from '../../assets/icons/const';
 
-const SearchInput = () => {
+const SearchInput = ({
+  onChangText,
+}: {
+  onChangText?: (text: string) => void;
+}) => {
   return (
     <>
       <HStack
@@ -14,12 +18,19 @@ const SearchInput = () => {
         borderRadius={sizeWidth(4)}
         space={4}
         paddingLeft={3}
+        padding={3}
+        width={sizeWidth(80)}
+        alignSelf={'center'}
       >
         <Image
           source={Icon.search}
           style={{ width: 20, height: 20, alignSelf: 'center' }}
         />
-        <TextInput placeholder='Tìm kiếm' placeholderTextColor={'gray'} />
+        <TextInput
+          onChangeText={onChangText}
+          placeholder='Tìm kiếm'
+          placeholderTextColor={'gray'}
+        />
       </HStack>
     </>
   );

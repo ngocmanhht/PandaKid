@@ -8,9 +8,12 @@ import Header from '../../../components/header';
 import LongButton from '../../../components/Button/LongButton';
 import ExitButton from './buton';
 import ConfirmModal from '../../../components/confirm-modal';
+import { useNavigation } from '@react-navigation/native';
+import { Screens } from '../../../routers/ScreensName';
 
 const SettingScreen = () => {
   const [confirmModal, setConfirmModal] = React.useState(false);
+  const navigation = useNavigation();
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header visible={false} title='Cài đặt' />
@@ -45,6 +48,7 @@ const SettingScreen = () => {
         isVisible={confirmModal}
         onDismiss={() => setConfirmModal(!confirmModal)}
         title='Bạn có chắc chắn muốn xóa ?'
+        onConfirmPress={() => navigation.navigate(Screens.LoginScreen as never)}
       />
     </Container>
   );

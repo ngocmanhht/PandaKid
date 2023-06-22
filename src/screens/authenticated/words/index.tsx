@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import {
   useIsFocused,
@@ -16,17 +16,16 @@ import { Icon } from '../../../assets/icons/const';
 import firestore from '@react-native-firebase/firestore';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
-import TouchableOpacity from '../../../components/Button/TouchableOpacity';
-import axios from 'axios';
-import RNFetchBlob from 'rn-fetch-blob';
-import SoundPlayer from 'react-native-sound-player';
+import useLogicWords from './useLogicWords';
 
 const WordScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [data, setData] = React.useState([]);
-
+  const [isVisibleModal, setIsVisibleModal] = React.useState(false);
+  const [swiperIndex, setSwiperIndex] = React.useState(0);
+  const { playSound } = useLogicWords();
   const uiStore: UIStore = useStores().uiStore;
   React.useEffect(() => {
     uiStore.showLoading();
@@ -34,6 +33,7 @@ const WordScreen = () => {
       .collection('Category')
       .doc(route?.params?.title)
       .collection(route?.params?.title)
+      .orderBy('id', 'asc')
       .onSnapshot((querySnapshot) => {
         const users: any = [];
 
@@ -50,50 +50,6 @@ const WordScreen = () => {
     return () => {};
   }, []);
 
-  const [isVisibleModal, setIsVisibleModal] = React.useState(false);
-  const [index, setIndex] = React.useState(0);
-  const playSound = async () => {
-    // let sound = new Sound(
-    //   'https://chunk.lab.zalo.ai/98196f230741ee1fb750/98196f230741ee1fb750',
-    //   null,
-    //   (err) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return;
-    //     }
-    //     sound.play();
-    //   }
-    // );
-
-    fetch(
-      'https://api.zalo.ai/v1/tts/synthesize?input=Chơi game gì? Coi phim gì? Đi chơi chỗ nào?',
-      {
-        body: 'speaker_id=4&speed=0.8',
-        headers: {
-          Apikey: 'MnU8hGGIm462mZaeyZ4ekmfuw2EvbjfI',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        method: 'POST',
-      }
-    )
-      .then((res) => {
-        SoundPlayer.loadUrl(res?.url);
-        try {
-          SoundPlayer.playUrl(res?.url);
-        } catch (err) {
-          console.error(err);
-        }
-
-        // SoundPlayer.addEventListener('FinishedLoadingURL', (ress) => {
-        //   console.log(ress);
-        //   // SoundPlayer.playUrl(res?.url);
-        // });
-        // if (success) {
-        //   SoundPlayer.playUrl(res?.url);
-        // }
-      })
-      .catch((err) => console.log(err));
-  };
   return (
     <Container backgroundSource={images.Background2}>
       <Header
@@ -118,17 +74,18 @@ const WordScreen = () => {
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
-              onPress={() => playSound()}
+              onPress={() => {
+                setSwiperIndex(index);
+                setIsVisibleModal(!isVisibleModal);
+                console.log(index);
+              }}
               key={index}
               activeOpacity={0.2}
-              isDoubleTap={true}
             >
               <BigCardWithVoice
                 key={index}
                 onPressVoiceIcon={() => {
-                  setIndex(index);
-                  setIsVisibleModal(!isVisibleModal);
-                  console.log(index);
+                  playSound(item?.soundUrl);
                 }}
                 title={item?.key}
                 source={{ uri: item.url }}
@@ -137,12 +94,13 @@ const WordScreen = () => {
           );
         }}
       />
+
       <WordModal
         isVisible={isVisibleModal}
         data={data}
-        onDismiss={() => setIsVisibleModal(!isVisibleModal)}
-        index={index}
-        onIndexChange={(e) => setIndex(e)}
+        onDismiss={() => setIsVisibleModal(false)}
+        index={swiperIndex}
+        // onIndexChange={(e) => setIndex(e)}
       />
     </Container>
   );

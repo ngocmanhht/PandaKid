@@ -33,11 +33,17 @@ const HomeScreen = () => {
         });
         setData(users);
         uiStore.hideLoading();
-        // console.log(users);
       });
   }, []);
   const navigation = useNavigation();
-
+  const [searchValue, setSearchValue] = React.useState('');
+  const searchedData = () => {
+    data.filter((item: any) =>
+      encodeURI(item?.key?.toLowerCase())?.includes(
+        encodeURI(searchValue.toLowerCase())
+      )
+    );
+  };
   return (
     <Container backgroundSource={images.MainBackground}>
       {/* <Text>sdd</Text> */}
@@ -60,10 +66,10 @@ const HomeScreen = () => {
         style={{ paddingHorizontal: 10 }}
         h={sizeHeight(80)}
       >
-        <SearchInput />
+        {/* <SearchInput onChangText={(e) => setSearchValue(e)} /> */}
 
         <FlatList
-          data={[0, 1, 2, 3, 4]}
+          data={data}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           snapToEnd={true}

@@ -8,6 +8,7 @@ import { VStack } from 'native-base';
 import MediumCard from '../../../components/medium-card';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
+import firestore from '@react-native-firebase/firestore';
 
 const StorageWord = () => {
   const data = [
@@ -19,6 +20,42 @@ const StorageWord = () => {
     { id: 6, title: 'word6' },
     { id: 7, title: 'word7' },
   ];
+  const addCollectionToFireBase = () => {
+    firestore().collection('userData').add({
+      name: 'Ada Lovelace',
+      age: 30,
+    });
+  };
+  const checkIfCollectionExists = () => {
+    // firestore()
+    //   .collection('Category')
+    //   .limit(1)
+    //   .get()
+    //   .then((checkSnapshot) => {
+    //     if (checkSnapshot.size == 0) {
+    //       console.log('No snapshots');
+    //     } else {
+    //       console.log('co');
+    //     }
+    //   });
+    // firestore()
+    //   .collection('userData')
+    //   .doc('userData')
+    //   .get()
+    //   .then((doc) => {
+    //     if (doc.exists) {
+    //       console.log('Exists');
+    //     } else {
+    //       console.log('No documents');
+    //     }
+    //   });
+  };
+  React.useEffect(() => {
+    checkIfCollectionExists();
+    addCollectionToFireBase();
+    return () => {};
+  }, []);
+
   const navigation = useNavigation();
   return (
     <Container backgroundSource={images.MainBackground}>

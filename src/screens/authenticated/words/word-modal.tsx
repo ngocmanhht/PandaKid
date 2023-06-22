@@ -1,11 +1,20 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React from 'react';
 import ReactNativeModal from 'react-native-modal';
 import { fontSize, sizeHeight, sizeWidth } from '../../../utils/Utils';
-import { Modal, Stack, VStack } from 'native-base';
+import { Stack, VStack } from 'native-base';
 import Swiper from 'react-native-swiper';
 import { Icon } from '../../../assets/icons/const';
 import { images } from '../../../assets/images/const';
+import useLogicWords from './useLogicWords';
+import Modal from 'react-native-modal/dist/modal';
 
 const WordModal = ({
   isVisible,
@@ -20,19 +29,23 @@ const WordModal = ({
   index?: number;
   onIndexChange?: (e: any) => void;
 }) => {
-  const [indexs, setIndex] = React.useState(0);
+  // const [indexs, setIndex] = React.useState(0);
+  const { playSound } = useLogicWords();
+  // React.useEffect(() => {
+  //   setIndex(index);
+  //   console.log('data', data);
+  //   return () => {};
+  // }, [index]);
+
   return (
     <Modal
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      }}
-      isOpen={isVisible}
-      onClose={onDismiss}
+      customBackdrop={
+        <TouchableWithoutFeedback onPress={onDismiss}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)' }} />
+        </TouchableWithoutFeedback>
+      }
+      isVisible={isVisible}
+      onDismiss={onDismiss}
     >
       <VStack
         style={{
@@ -70,17 +83,17 @@ const WordModal = ({
               <VStack
                 space={3}
                 style={{
-                  paddingVertical: 10,
+                  paddingVertical: 5,
                   paddingHorizontal: 5,
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: fontSize(4), fontWeight: '600' }}>
+                <Text style={{ fontSize: fontSize(6), fontWeight: '600' }}>
                   {item?.key}
                 </Text>
 
                 <Image
-                  source={{ uri: item?.url }}
+                  source={{ uri: `${item?.url}` }}
                   style={{
                     borderRadius: sizeWidth(3),
                     width: sizeWidth(60),
@@ -88,7 +101,7 @@ const WordModal = ({
                   }}
                   resizeMode='contain'
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => playSound(item?.soundUrl)}>
                   <Image
                     source={Icon.voice}
                     resizeMode='cover'

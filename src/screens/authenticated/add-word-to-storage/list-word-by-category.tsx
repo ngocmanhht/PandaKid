@@ -1,20 +1,38 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { VStack } from 'native-base';
-import { sizeWidth } from '../../../utils/Utils';
+import { fontSize, sizeWidth } from '../../../utils/Utils';
 import MediumCard from '../../../components/medium-card';
 import Card from './card';
-
+import firestore from '@react-native-firebase/firestore';
+import UIStore from '../../../stores/ui';
+import useStores from '../../../hooks/use-stores';
 const ListWordByCate = ({ categoryName }: { categoryName?: string }) => {
-  const data = [
-    { id: 1, title: 'word1' },
-    { id: 2, title: 'word2' },
-    { id: 3, title: 'word3' },
-    { id: 4, title: 'word4' },
-    { id: 5, title: 'word5' },
-    { id: 6, title: 'word6' },
-    { id: 7, title: 'word7' },
-  ];
+  const [data, setData] = React.useState([]);
+  const uiStore: UIStore = useStores().uiStore;
+
+  React.useEffect(() => {
+    uiStore.showLoading();
+    firestore()
+      .collection('Category')
+      .doc(categoryName)
+      .collection(categoryName)
+      .orderBy('id', 'asc')
+      .onSnapshot((querySnapshot) => {
+        const users: any = [];
+
+        querySnapshot.forEach((documentSnapshot) => {
+          users.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setData(users);
+        uiStore.hideLoading();
+        // console.log(users);
+      });
+    return () => {};
+  }, []);
   return (
     <VStack
       space={3}
@@ -36,14 +54,16 @@ const ListWordByCate = ({ categoryName }: { categoryName?: string }) => {
           borderRadius: sizeWidth(4),
         }}
       >
-        <Text>{categoryName || 'categoryName'}</Text>
+        <Text style={{ fontSize: fontSize(4), fontWeight: '600' }}>
+          {categoryName || 'categoryName'}
+        </Text>
       </View>
       <FlatList
         data={data}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => {
-          return <Card wordName={item?.title} />;
+          return <Card source={{ uri: item?.url }} wordName={item?.key} />;
         }}
       />
     </VStack>

@@ -9,14 +9,37 @@ import ListWordByCate from './list-word-by-category';
 import { sizeHeight } from '../../../utils/Utils';
 import { Icon } from '../../../assets/icons/const';
 import { useNavigation } from '@react-navigation/native';
+import UIStore from '../../../stores/ui';
+import useStores from '../../../hooks/use-stores';
+import firestore from '@react-native-firebase/firestore';
 
 const AddWordToStorage = () => {
-  const data = [
-    { id: 1, title: 'category1' },
-    { id: 2, title: 'category2' },
-    { id: 3, title: 'category3' },
-    { id: 4, title: 'category4' },
-  ];
+  // const data = [
+  //   { id: 1, title: 'category1' },
+  //   { id: 2, title: 'category2' },
+  //   { id: 3, title: 'category3' },
+  //   { id: 4, title: 'category4' },
+  // ];
+  const uiStore: UIStore = useStores().uiStore;
+
+  const [data, setData] = React.useState<any>([]);
+  React.useEffect(() => {
+    uiStore.showLoading();
+    firestore()
+      .collection('Category')
+      .onSnapshot((querySnapshot) => {
+        const users: any = [];
+
+        querySnapshot.forEach((documentSnapshot) => {
+          users.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        setData(users);
+        uiStore.hideLoading();
+      });
+  }, []);
   const navigation = useNavigation();
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -26,13 +49,13 @@ const AddWordToStorage = () => {
         rightIconShown={true}
         rightIconSource={Icon.done}
       />
-      <VStack space={5} style={{ padding: 20 }}>
-        <SearchInput />
-        <View style={{ height: sizeHeight(80) }}>
+      <VStack space={5} style={{ padding: 10 }}>
+        {/* <SearchInput /> */}
+        <View style={{ height: sizeHeight(90) }}>
           <FlatList
             data={data}
             renderItem={({ item, index }) => {
-              return <ListWordByCate categoryName={item?.title} />;
+              return <ListWordByCate categoryName={item?.key} />;
             }}
           />
         </View>
