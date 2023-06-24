@@ -23,18 +23,41 @@ import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
+import asyncStorageService from '../../../service/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from '@tanstack/react-query';
 
 const LoginScreen = () => {
   const [value, setvalue] = React.useState('');
   const showToast = useToast();
   const uiStore: UIStore = useStores().uiStore;
+  const isLogin = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    if (token != null) {
+      return true;
+    }
+    return false;
+  };
+  const {} = useQuery({
+    queryKey: ['isLogin'],
+    queryFn: isLogin,
+    onSuccess: (res) => {
+      if (res) {
+        navigation.navigate(Screens.AuthenticatedNavigator as never);
+      }
+      // console.log(res);
+    },
+  });
+
   const handleLogin = (email: string, password: any) => {
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then((e) => {
+      .then((e: any) => {
         if (e.user) {
           uiStore.hideLoading();
           console.log(e);
+          AsyncStorage.setItem('access_token', '123123123');
+          asyncStorageService.setTypeAccount(e?.user?.displayName);
           showToast.show({
             title: 'xsxs',
             placement: 'top',

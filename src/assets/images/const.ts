@@ -13,4 +13,5 @@ export const images = {
   FailedScreen: require('./FailScreen.png'),
   Avatar: require('./avata.png'),
   warning: require('./warning.png'),
+  update: require('./update.png'),
 };

@@ -27,4 +27,7 @@ export const Icon = {
   pause: require('./pause.png'),
   cameraOptions: require('./camera-option.png'),
   libraryOptions: require('./library-option.png'),
+  update: require('./update.png'),
+  updateBlue: require('./update-blue.png'),
+  redCancel: require('./red-cancel.png'),
 };

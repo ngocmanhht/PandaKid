@@ -14,6 +14,9 @@ import { Provider } from 'mobx-react';
 import stores from './src/stores';
 import LoadingSpinner from './src/components/loading-spinner';
 import CameraOption from './src/components/camera-option';
+import { QueryClientProvider } from '@tanstack/react-query';
+import queryClient from './src/service/query-client';
+import UpdateModal from './src/components/update-modal';
 
 const App = () => {
   React.useEffect(() => {
@@ -22,15 +25,18 @@ const App = () => {
 
   return (
     <>
-      <Provider {...stores}>
-        <NativeBaseProvider>
-          <NavigationContainer>
-            <AppNavigator />
-            <LoadingSpinner />
-            <CameraOption />
-          </NavigationContainer>
-        </NativeBaseProvider>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider {...stores}>
+          <NativeBaseProvider>
+            <NavigationContainer>
+              <AppNavigator />
+              <LoadingSpinner />
+              <CameraOption />
+              <UpdateModal />
+            </NavigationContainer>
+          </NativeBaseProvider>
+        </Provider>
+      </QueryClientProvider>
     </>
   );
 };

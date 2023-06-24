@@ -14,10 +14,18 @@ import firestore from '@react-native-firebase/firestore';
 import { AnyIfEmpty } from 'react-redux';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const uiStore: UIStore = useStores().uiStore;
   const [data, setData] = React.useState<any>([]);
+  const isBasicAccount = async () => {
+    const typeAccount = await AsyncStorage.getItem('type_account');
+    if (JSON.parse(typeAccount) === 'Basic') {
+      return true;
+    }
+    return false;
+  };
   React.useEffect(() => {
     uiStore.showLoading();
     firestore()
@@ -34,7 +42,11 @@ const HomeScreen = () => {
         setData(users);
         uiStore.hideLoading();
       });
+    if (isBasicAccount()) {
+      uiStore.showUpdateModal();
+    }
   }, []);
+
   const navigation = useNavigation();
   const [searchValue, setSearchValue] = React.useState('');
   const searchedData = () => {
@@ -44,6 +56,16 @@ const HomeScreen = () => {
       )
     );
   };
+  const handleAdd = async () => {
+    if (await isBasicAccount()) {
+      uiStore.showUpdateModal();
+    } else {
+      navigation.navigate(
+        Screens.AddCategory as never,
+        { data: data } as never
+      );
+    }
+  };
   return (
     <Container backgroundSource={images.MainBackground}>
       {/* <Text>sdd</Text> */}
@@ -52,12 +74,7 @@ const HomeScreen = () => {
         title='Trang chủ'
         rightIconShown={true}
         rightIconSource={Icon.add}
-        rightOnpress={() =>
-          navigation.navigate(
-            Screens.AddCategory as never,
-            { data: data } as never
-          )
-        }
+        rightOnpress={handleAdd}
       />
 
       <VStack

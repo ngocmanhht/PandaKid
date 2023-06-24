@@ -7,88 +7,93 @@ import Card from './card';
 import firestore from '@react-native-firebase/firestore';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
-const ListWordByCate = ({
-  categoryName,
-  handleAddItem,
-  handleRemoveItem,
-}: {
-  categoryName?: string;
-  handleAddItem?: (item: any) => void;
-  handleRemoveItem?: (item: any) => void;
-}) => {
-  const [data, setData] = React.useState([]);
-  const uiStore: UIStore = useStores().uiStore;
-  const getWordByCate = () => {
-    uiStore.showLoading();
-    firestore()
-      .collection('Category')
-      .doc(categoryName)
-      .collection(categoryName)
-      .orderBy('id', 'asc')
-      .onSnapshot((querySnapshot) => {
-        const users: any = [];
+import { observer } from 'mobx-react';
+import SessionStore from '../../../stores/session';
+const ListWordByCate = observer(
+  ({
+    categoryName,
+    handleAddItem,
+    handleRemoveItem,
+  }: {
+    categoryName?: string;
+    handleAddItem?: (item: any) => void;
+    handleRemoveItem?: (item: any) => void;
+  }) => {
+    const [data, setData] = React.useState([]);
+    const uiStore: UIStore = useStores().uiStore;
+    const sessionStore: SessionStore = useStores().sessionStore;
+    const getWordByCate = () => {
+      uiStore.showLoading();
+      firestore()
+        .collection('Category')
+        .doc(categoryName)
+        .collection(categoryName)
+        .orderBy('id', 'asc')
+        .onSnapshot((querySnapshot) => {
+          const users: any = [];
 
-        querySnapshot.forEach((documentSnapshot) => {
-          users.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
+          querySnapshot.forEach((documentSnapshot) => {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
           });
+          setData(users);
+          uiStore.hideLoading();
+          // console.log(users);
         });
-        setData(users);
-        uiStore.hideLoading();
-        // console.log(users);
-      });
-  };
-  React.useEffect(() => {
-    getWordByCate();
-    return () => {};
-  }, []);
-  return (
-    <VStack
-      space={3}
-      style={{
-        borderWidth: 2,
-        backgroundColor: '#DEE4FF',
-        borderColor: 'white',
-        padding: 10,
-        borderRadius: sizeWidth(4),
-        margin: 3,
-      }}
-    >
-      <View
+    };
+    React.useEffect(() => {
+      getWordByCate();
+      return () => {};
+    }, []);
+    return (
+      <VStack
+        space={3}
         style={{
-          width: '100%',
-          alignItems: 'center',
+          borderWidth: 2,
+          backgroundColor: '#DEE4FF',
+          borderColor: 'white',
           padding: 10,
-          backgroundColor: 'white',
           borderRadius: sizeWidth(4),
+          margin: 3,
         }}
       >
-        <Text style={{ fontSize: fontSize(4), fontWeight: '600' }}>
-          {categoryName || 'categoryName'}
-        </Text>
-      </View>
-      <FlatList
-        data={data}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item, index }) => {
-          return (
-            <>
-              <Card
-                source={{ uri: item?.url }}
-                wordName={item?.key}
-                onValueChange={(e) => {
-                  e === true ? handleAddItem(item) : handleRemoveItem(item);
-                }}
-              />
-            </>
-          );
-        }}
-      />
-    </VStack>
-  );
-};
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            padding: 10,
+            backgroundColor: 'white',
+            borderRadius: sizeWidth(4),
+          }}
+        >
+          <Text style={{ fontSize: fontSize(4), fontWeight: '600' }}>
+            {categoryName || 'categoryName'}
+          </Text>
+        </View>
+        <FlatList
+          data={data}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item, index }) => {
+            return (
+              <>
+                <Card
+                  source={{ uri: item?.url }}
+                  wordName={item?.key}
+                  onValueChange={(e) => {
+                    e === true ? handleAddItem(item) : handleRemoveItem(item);
+                  }}
+                />
+              </>
+            );
+          }}
+        />
+      </VStack>
+    );
+  }
+);
 
 export default ListWordByCate;
 

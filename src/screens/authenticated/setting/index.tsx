@@ -10,10 +10,32 @@ import ExitButton from './buton';
 import ConfirmModal from '../../../components/confirm-modal';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
-
+import { Icon } from '../../../assets/icons/const';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SettingScreen = () => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const navigation = useNavigation();
+  const checkProfile = () => {
+    auth().currentUser?.updateProfile({
+      displayName: 'Basic',
+    });
+    // console.log(auth().currentUser);
+  };
+  React.useEffect(() => {
+    checkProfile();
+
+    return () => {};
+  }, []);
+  const handleLogout = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: Screens.AuthenticationNavigator as never }],
+    });
+    AsyncStorage.removeItem('access_token');
+  };
+  const email = auth().currentUser?.email;
+
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header visible={false} title='Cài đặt' />
@@ -37,18 +59,24 @@ const SettingScreen = () => {
         <Text
           style={{ fontSize: fontSize(5), fontWeight: 'bold', color: 'white' }}
         >
-          Đoàn Ngọc
+          {email?.slice(0, email?.indexOf('@'))}
         </Text>
-        <Text style={{ fontSize: fontSize(4), color: 'white' }}>
-          doananhngoc5666@gmail.com
-        </Text>
+        <Text style={{ fontSize: fontSize(4), color: 'white' }}>{email}</Text>
       </VStack>
-      <ExitButton onPress={() => setConfirmModal(!confirmModal)} />
+
+      <VStack margin={5} space={1}>
+        <ExitButton title={'Nâng cấp tài khoản'} source={Icon.update} />
+        <ExitButton
+          title={'Đăng xuất'}
+          source={Icon.logout}
+          onPress={() => setConfirmModal(!confirmModal)}
+        />
+      </VStack>
       <ConfirmModal
         isVisible={confirmModal}
         onDismiss={() => setConfirmModal(!confirmModal)}
-        title='Bạn có chắc chắn muốn xóa ?'
-        onConfirmPress={() => navigation.navigate(Screens.LoginScreen as never)}
+        title='Bạn có chắc chắn muốn thoát ?'
+        onConfirmPress={handleLogout}
       />
     </Container>
   );

@@ -33,8 +33,11 @@ const RegisterScreen = () => {
     if (data?.password === data?.repassword) {
       auth()
         .createUserWithEmailAndPassword(data?.email, data?.password)
-        .then((e) => {
-          // console.log(e)
+        .then((e: any) => {
+          // console.log(e?.user);
+          e?.user.updateProfile({
+            displayName: 'Basic',
+          });
           showToast.show({
             title: 'xsxs',
             placement: 'top',

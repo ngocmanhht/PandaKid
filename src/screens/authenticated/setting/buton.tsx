@@ -4,7 +4,15 @@ import { sizeWidth, fontSize, sizeHeight } from '../../../utils/Utils';
 import { HStack } from 'native-base';
 import { Icon } from '../../../assets/icons/const';
 
-const ExitButton = ({ onPress }: { onPress?: () => void }) => {
+const ExitButton = ({
+  onPress,
+  title,
+  source,
+}: {
+  onPress?: () => void;
+  title?: any;
+  source?: any;
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -18,19 +26,18 @@ const ExitButton = ({ onPress }: { onPress?: () => void }) => {
         borderColor: 'white',
         borderRadius: sizeWidth(5),
         backgroundColor: '#92CB76',
-        marginTop: sizeHeight(3),
       }}
     >
       <HStack alignItems={'center'} space={2}>
         <Image
-          source={Icon.logout}
+          source={source}
           style={{ width: 20, height: 20 }}
           resizeMode='contain'
         />
         <Text
           style={{ fontSize: fontSize(4), fontWeight: 'bold', color: 'white' }}
         >
-          Đăng xuất
+          {title}
         </Text>
       </HStack>
     </TouchableOpacity>

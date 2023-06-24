@@ -81,6 +81,7 @@ const WordModal = ({
           {data?.map((item, index) => {
             return (
               <VStack
+                key={index}
                 space={3}
                 style={{
                   paddingVertical: 5,

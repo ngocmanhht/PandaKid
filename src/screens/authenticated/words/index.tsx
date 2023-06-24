@@ -17,6 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import useLogicWords from './useLogicWords';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WordScreen = () => {
   const route = useRoute();
@@ -27,6 +28,13 @@ const WordScreen = () => {
   const [swiperIndex, setSwiperIndex] = React.useState(0);
   const { playSound } = useLogicWords();
   const uiStore: UIStore = useStores().uiStore;
+  const isBasicAccount = async () => {
+    const typeAccount = await AsyncStorage.getItem('type_account');
+    if (JSON.parse(typeAccount) === 'Basic') {
+      return true;
+    }
+    return false;
+  };
   React.useEffect(() => {
     uiStore.showLoading();
     firestore()
@@ -45,11 +53,17 @@ const WordScreen = () => {
         });
         setData(users);
         uiStore.hideLoading();
-        console.log(users);
+        // console.log(users);
       });
     return () => {};
   }, []);
-
+  const handleAdd = async () => {
+    if (await isBasicAccount()) {
+      uiStore.showUpdateModal();
+    } else {
+      navigation.navigate(Screens.AddWord as never, { data: data } as never);
+    }
+  };
   return (
     <Container backgroundSource={images.Background2}>
       <Header
@@ -57,9 +71,7 @@ const WordScreen = () => {
         title={route?.params?.title}
         rightIconShown={true}
         rightIconSource={Icon.add}
-        rightOnpress={() =>
-          navigation.navigate(Screens.AddWord as never, { data: data } as never)
-        }
+        rightOnpress={handleAdd}
       />
       <FlatList
         data={data}

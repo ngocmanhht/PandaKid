@@ -9,10 +9,12 @@ const Card = ({
   source,
   wordName,
   onValueChange,
+  value = false,
 }: {
   source?: any;
   wordName?: string;
-  onValueChange?: (e) => void;
+  onValueChange?: (e: any) => void;
+  value?: boolean;
 }) => {
   return (
     <VStack
@@ -48,6 +50,7 @@ const Card = ({
             right: 5,
             top: 0,
           }}
+          value={value}
           onValueChange={onValueChange}
           boxType='square'
           tintColor='#00D33B'

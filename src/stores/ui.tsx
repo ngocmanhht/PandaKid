@@ -27,6 +27,19 @@ class UIStore {
       isVisible: false,
     };
   };
+  @observable updateModal: {
+    isVisible: boolean;
+  } = { isVisible: false };
+  @action showUpdateModal = () => {
+    this.updateModal = {
+      isVisible: true,
+    };
+  };
+  @action hideUpdateModal = () => {
+    this.updateModal = {
+      isVisible: false,
+    };
+  };
   constructor() {
     makeObservable(this);
   }

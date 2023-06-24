@@ -53,7 +53,7 @@ const StorageWord = observer(() => {
           renderItem={({ item, index }) => {
             return (
               <MediumCard
-                source={{ uri: item.url }}
+                source={{ uri: item?.url }}
                 disabled={true}
                 title={item?.key}
               />

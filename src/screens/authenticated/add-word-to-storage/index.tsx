@@ -45,11 +45,20 @@ const AddWordToStorage = () => {
     return setStorageWordData(newArr);
   };
   const handleDone = () => {
-    console.log(storageWordData);
-    sessionStore.setData({
-      storage: storageWordData,
-    });
-    navigation.goBack();
+    // console.log(storageWordData);
+    // const newDta
+    const sessionStores = sessionStore?.storageWords?.storage as any;
+    if (sessionStores?.length > 0) {
+      sessionStore.setData({
+        storage: [...sessionStores, ...storageWordData],
+      });
+      navigation.goBack();
+    } else {
+      sessionStore.setData({
+        storage: [...storageWordData],
+      });
+      navigation.goBack();
+    }
   };
   return (
     <Container backgroundSource={images.MainBackground}>
