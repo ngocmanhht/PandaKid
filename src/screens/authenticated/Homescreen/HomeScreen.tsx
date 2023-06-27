@@ -42,33 +42,29 @@ const HomeScreen = () => {
         setData(users);
         uiStore.hideLoading();
       });
-    if (isBasicAccount()) {
-      uiStore.showUpdateModal();
-    }
+    setTimeout(() => {
+      if (isBasicAccount()) {
+        uiStore.showUpdateModal();
+      }
+    }, 3000);
   }, []);
 
   const navigation = useNavigation();
   const [searchValue, setSearchValue] = React.useState('');
-  const searchedData = () => {
-    data.filter((item: any) =>
-      encodeURI(item?.key?.toLowerCase())?.includes(
-        encodeURI(searchValue.toLowerCase())
-      )
-    );
-  };
+
   const handleAdd = async () => {
-    if (await isBasicAccount()) {
-      uiStore.showUpdateModal();
-    } else {
-      navigation.navigate(
-        Screens.AddCategory as never,
-        { data: data } as never
-      );
-    }
+    // if (await isBasicAccount()) {
+    //   uiStore.showUpdateModal();
+    // } else {
+    //   navigation.navigate(
+    //     Screens.AddCategory as never,
+    //     { data: data } as never
+    //   );
+    // }
+    navigation.navigate(Screens.AddCategory as never, { data: data } as never);
   };
   return (
     <Container backgroundSource={images.MainBackground}>
-      {/* <Text>sdd</Text> */}
       <Header
         visible={false}
         title='Trang chủ'

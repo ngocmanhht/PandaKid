@@ -2,11 +2,13 @@ import {
   Button,
   Image,
   ImageBackground,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React from 'react';
@@ -111,101 +113,105 @@ const LoginScreen = () => {
       style={{ flex: 1 }}
       source={images.background}
     >
-      <SafeAreaView>
-        <Header visible={false} title='Đăng nhập' />
-        <VStack paddingTop={sizeHeight(8)}>
-          <Image
-            source={images.IntroImage1}
-            style={{
-              width: sizeWidth(65),
-              alignSelf: 'center',
-              height: sizeHeight(20),
-            }}
-            resizeMode='contain'
-          />
-          <VStack paddingTop={sizeHeight(10)} alignSelf={'center'} space={3}>
-            {/* Email */}
-
-            <Controller
-              control={control}
-              rules={{
-                required: true,
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView>
+          <Header visible={false} title='Đăng nhập' />
+          <VStack paddingTop={sizeHeight(8)}>
+            <Image
+              source={images.IntroImage1}
+              style={{
+                width: sizeWidth(65),
+                alignSelf: 'center',
+                height: sizeHeight(20),
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <CustomTextInput
-                  placeholder='Email'
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-              name='email'
+              resizeMode='contain'
             />
-            {errors.email && (
-              <Text
-                style={{
-                  color: 'red',
-                  alignSelf: 'flex-end',
-                  fontSize: fontSize(3),
-                }}
-              >
-                * Hãy nhập email
-              </Text>
-            )}
+            <VStack paddingTop={sizeHeight(10)} alignSelf={'center'} space={3}>
+              {/* Email */}
 
-            {/* Password */}
-            <Controller
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <CustomTextInput
-                  placeholder='Mật khẩu'
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  rightIconShow={true}
-                />
-              )}
-              name='password'
-            />
-            {errors.password && (
-              <Text
-                style={{
-                  color: 'red',
-                  alignSelf: 'flex-end',
-                  fontSize: fontSize(3),
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
                 }}
-              >
-                * Hãy nhập password
-              </Text>
-            )}
-
-            <VStack space={5} style={{ top: sizeHeight(8) }}>
-              <LongButton
-                titleStyle={{ fontSize: fontSize(4.5), fontWeight: 'bold' }}
-                onPress={handleSubmit(onSubmit)}
-                title='Đăng nhập'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomTextInput
+                    placeholder='Email'
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                  />
+                )}
+                name='email'
               />
-              <HStack space={1} alignSelf={'center'}>
-                <Text style={{ fontSize: fontSize(3.5) }}>
-                  Bạn chưa tài khoản?
-                </Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(Screens.RegisterScreen as never)
-                  }
+              {errors.email && (
+                <Text
+                  style={{
+                    color: 'red',
+                    alignSelf: 'flex-end',
+                    fontSize: fontSize(3),
+                  }}
                 >
-                  <Text style={{ fontSize: fontSize(3.5), fontWeight: '600' }}>
-                    Đăng ký ngay
+                  * Hãy nhập email
+                </Text>
+              )}
+
+              {/* Password */}
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomTextInput
+                    placeholder='Mật khẩu'
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    rightIconShow={true}
+                  />
+                )}
+                name='password'
+              />
+              {errors.password && (
+                <Text
+                  style={{
+                    color: 'red',
+                    alignSelf: 'flex-end',
+                    fontSize: fontSize(3),
+                  }}
+                >
+                  * Hãy nhập password
+                </Text>
+              )}
+
+              <VStack space={5} style={{ top: sizeHeight(8) }}>
+                <LongButton
+                  titleStyle={{ fontSize: fontSize(4.5), fontWeight: 'bold' }}
+                  onPress={handleSubmit(onSubmit)}
+                  title='Đăng nhập'
+                />
+                <HStack space={1} alignSelf={'center'}>
+                  <Text style={{ fontSize: fontSize(3.5) }}>
+                    Bạn chưa tài khoản?
                   </Text>
-                </TouchableOpacity>
-              </HStack>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(Screens.RegisterScreen as never)
+                    }
+                  >
+                    <Text
+                      style={{ fontSize: fontSize(3.5), fontWeight: '600' }}
+                    >
+                      Đăng ký ngay
+                    </Text>
+                  </TouchableOpacity>
+                </HStack>
+              </VStack>
             </VStack>
           </VStack>
-        </VStack>
-      </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 };

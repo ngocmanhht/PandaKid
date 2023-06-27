@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
 import Header from '../../../components/header';
@@ -19,6 +19,7 @@ import { Icon } from '../../../assets/icons/const';
 import AddButton from '../../../components/add-buton';
 import AddEditModal from '../../../components/add-edit-modal';
 import Option from '../../../components/option';
+import { firebase } from '@react-native-firebase/firestore';
 
 const AddCategory = () => {
   const navigation = useNavigation();
@@ -35,7 +36,14 @@ const AddCategory = () => {
     }
   };
   const [randomColors, setRandomColors] = React.useState(randomColor());
-  const color = randomColor();
+  const db = firebase.firestore();
+  useEffect(() => {
+    db.collection('userData').doc('chữ cái').collection('chữ cái').add({
+      id: 1,
+      name: 'chữ a',
+    });
+  }, []);
+
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header

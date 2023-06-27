@@ -33,6 +33,7 @@ const SettingScreen = () => {
       routes: [{ name: Screens.AuthenticationNavigator as never }],
     });
     AsyncStorage.removeItem('access_token');
+    AsyncStorage.removeItem('type_account');
   };
   const email = auth().currentUser?.email;
 
