@@ -99,6 +99,7 @@ const AddCategory = () => {
         onDismiss={() => setAddModalVisible(!addModalVisible)}
         title='Thêm chủ đề'
         btnTitle='Tạo chủ đề'
+        placeholderTxt='Mời nhập chủ đề'
       />
       <Option
         isVisible={choiceModal}

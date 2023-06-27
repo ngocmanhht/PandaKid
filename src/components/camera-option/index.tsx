@@ -21,9 +21,9 @@ const CameraOption = observer(() => {
           if (response.didCancel) {
             console.log('CANCEL');
           }
-          åå;
+
           if (!response.errorMessage) {
-            console.log(response?.assets[0]);
+            console.log(response?.assets[0]?.base64);
           }
         })
         .catch((error) => {

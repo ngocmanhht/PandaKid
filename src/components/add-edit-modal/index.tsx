@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
 } from 'react-native';
 import React from 'react';
 import ReactNativeModal from 'react-native-modal';
@@ -23,11 +24,13 @@ const AddEditModal = observer(
     onDismiss,
     title,
     btnTitle,
+    placeholderTxt,
   }: {
     isVisible?: any;
     onDismiss?: () => void;
     title?: string;
     btnTitle?: string;
+    placeholderTxt?: string;
   }) => {
     const uiStore: UIStore = useStores().uiStore;
 
@@ -95,6 +98,17 @@ const AddEditModal = observer(
                 style={{ width: sizeWidth(20), height: sizeHeight(10) }}
               />
             </TouchableOpacity>
+            <TextInput
+              placeholder={placeholderTxt || 'placeholder'}
+              style={{
+                borderWidth: 1,
+                width: '100%',
+                borderRadius: sizeWidth(4),
+                paddingVertical: 10,
+                paddingHorizontal: 5,
+              }}
+              placeholderTextColor={'black'}
+            />
             <LongButton
               style={{ width: '100%' }}
               title={btnTitle || 'btnTitle'}
