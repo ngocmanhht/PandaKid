@@ -16,6 +16,7 @@ class UIStore {
   };
   @observable cameraOption: {
     isVisible: boolean;
+    imageData?: any;
   } = { isVisible: false };
   @action showCameraOption = () => {
     this.cameraOption = {
