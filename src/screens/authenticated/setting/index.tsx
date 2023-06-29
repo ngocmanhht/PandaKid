@@ -13,20 +13,15 @@ import { Screens } from '../../../routers/ScreensName';
 import { Icon } from '../../../assets/icons/const';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UIStore from '../../../stores/ui';
+import useStores from '../../../hooks/use-stores';
 const SettingScreen = () => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const navigation = useNavigation();
-  const checkProfile = () => {
-    auth().currentUser?.updateProfile({
-      displayName: 'Basic',
-    });
-    // console.log(auth().currentUser);
-  };
-  React.useEffect(() => {
-    checkProfile();
 
-    return () => {};
-  }, []);
+  const typeAccount = auth().currentUser?.displayName;
+  const uiStore: UIStore = useStores().uiStore;
+
   const handleLogout = () => {
     navigation.reset({
       index: 0,
@@ -53,7 +48,9 @@ const SettingScreen = () => {
         space={2}
       >
         <Image
-          source={images.Avatar}
+          source={
+            typeAccount === 'Basic' ? images.Avatar : images.PremiumAvatar
+          }
           style={{ width: 100, height: 100, alignSelf: 'center' }}
           resizeMode='contain'
         />
@@ -66,7 +63,14 @@ const SettingScreen = () => {
       </VStack>
 
       <VStack margin={5} space={1}>
-        <ExitButton title={'Nâng cấp tài khoản'} source={Icon.update} />
+        {typeAccount === 'Basic' && (
+          <ExitButton
+            onPress={() => uiStore.showDescriptionUpdateModal()}
+            title={'Nâng cấp tài khoản'}
+            source={Icon.update}
+          />
+        )}
+
         <ExitButton
           title={'Đăng xuất'}
           source={Icon.logout}

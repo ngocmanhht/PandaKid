@@ -12,6 +12,8 @@ export const images = {
   IntroduceScreen: require('./introduceScreen.png'),
   FailedScreen: require('./FailScreen.png'),
   Avatar: require('./avata.png'),
+  PremiumAvatar: require('./premium-avatar.png'),
   warning: require('./warning.png'),
   update: require('./update.png'),
+  updateBackground: require('./update-back-ground.png'),
 };

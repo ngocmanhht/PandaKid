@@ -36,7 +36,6 @@ const RegisterScreen = () => {
   });
   const navigation = useNavigation();
   const showToast = useToast();
-
   const onSubmit = (data: any) => {
     if (data?.password === data?.repassword) {
       auth()

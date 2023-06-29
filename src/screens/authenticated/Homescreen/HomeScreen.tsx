@@ -1,4 +1,10 @@
-import { FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
@@ -15,10 +21,15 @@ import { AnyIfEmpty } from 'react-redux';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
+import { ColorSpace } from 'react-native-reanimated';
 
 const HomeScreen = () => {
   const uiStore: UIStore = useStores().uiStore;
   const [data, setData] = React.useState<any>([]);
+  const [userData, setUserData] = React.useState<any>([]);
+  const email = auth().currentUser?.email as any;
+
   const isBasicAccount = async () => {
     const typeAccount = await AsyncStorage.getItem('type_account');
     if (JSON.parse(typeAccount) === 'Basic') {
@@ -27,41 +38,55 @@ const HomeScreen = () => {
     return false;
   };
   React.useEffect(() => {
+    // handleGetCategory();
+    // getUserCategory();
     uiStore.showLoading();
-    firestore()
+    setTimeout(async () => {
+      if (await isBasicAccount()) {
+        uiStore.showUpdateModal();
+      }
+    }, 3000);
+    const subscriber = firestore()
       .collection('Category')
       .onSnapshot((querySnapshot) => {
         const users: any = [];
 
         querySnapshot.forEach((documentSnapshot) => {
-          users.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          if (
+            documentSnapshot?.data()?.type === 'admin' ||
+            documentSnapshot?.data()?.type === email
+          ) {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
+          }
         });
         setData(users);
         uiStore.hideLoading();
       });
-    setTimeout(() => {
-      if (isBasicAccount()) {
-        uiStore.showUpdateModal();
-      }
-    }, 3000);
+    // console.log(data);
+
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
   }, []);
 
   const navigation = useNavigation();
   const [searchValue, setSearchValue] = React.useState('');
 
   const handleAdd = async () => {
-    // if (await isBasicAccount()) {
-    //   uiStore.showUpdateModal();
-    // } else {
-    //   navigation.navigate(
-    //     Screens.AddCategory as never,
-    //     { data: data } as never
-    //   );
-    // }
-    navigation.navigate(Screens.AddCategory as never, { data: data } as never);
+    if (await isBasicAccount()) {
+      uiStore.showUpdateModal();
+    } else {
+      navigation.navigate(
+        Screens.AddCategory as never,
+        { data: data } as never
+      );
+    }
+  };
+  const loadMore = () => {};
+  const listFooterComponent = () => {
+    return <ActivityIndicator size='large' color={'blue'} />;
   };
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -87,9 +112,10 @@ const HomeScreen = () => {
           showsVerticalScrollIndicator={false}
           snapToEnd={true}
           contentContainerStyle={{ alignSelf: 'center', width: sizeWidth(90) }}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             return (
               <TouchableOpacity
+                key={index}
                 onPress={() =>
                   navigation.navigate(
                     Screens.WordScreens as never,

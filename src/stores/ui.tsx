@@ -16,8 +16,8 @@ class UIStore {
   };
   @observable cameraOption: {
     isVisible: boolean;
-    imageData?: any;
   } = { isVisible: false };
+
   @action showCameraOption = () => {
     this.cameraOption = {
       isVisible: true,
@@ -38,6 +38,19 @@ class UIStore {
   };
   @action hideUpdateModal = () => {
     this.updateModal = {
+      isVisible: false,
+    };
+  };
+  @observable descriptionUpdateModal: {
+    isVisible: boolean;
+  } = { isVisible: false };
+  @action showDescriptionUpdateModal = () => {
+    this.descriptionUpdateModal = {
+      isVisible: true,
+    };
+  };
+  @action hideDescriptionUpdateModal = () => {
+    this.descriptionUpdateModal = {
       isVisible: false,
     };
   };

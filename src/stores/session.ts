@@ -9,6 +9,14 @@ class SessionStore {
       storage,
     };
   };
+  @observable dataImage: {
+    imageData?: any;
+  };
+  @action setImageData = ({ imageData }: { imageData?: any }) => {
+    this.dataImage = {
+      imageData,
+    };
+  };
 }
 
 export default SessionStore;

@@ -4,6 +4,7 @@ export const IMAGE_LIBRARY_OPTION: any = {
   mediaType: 'photo',
   selectionLimit: 1,
   includeBase64: true,
+  quality: 0.5,
 };
 
 export const CAMERA_OPTION: ImagePicker.CameraOptions = {

@@ -17,6 +17,8 @@ import LongButton from '../Button/LongButton';
 import UIStore from '../../stores/ui';
 import useStores from '../../hooks/use-stores';
 import { observer } from 'mobx-react';
+import SessionStore from '../../stores/session';
+import { images } from '../../assets/images/const';
 
 const AddEditModal = observer(
   ({
@@ -25,15 +27,19 @@ const AddEditModal = observer(
     title,
     btnTitle,
     placeholderTxt,
+    onChangeText,
+    onAddPress,
   }: {
     isVisible?: any;
     onDismiss?: () => void;
     title?: string;
     btnTitle?: string;
     placeholderTxt?: string;
+    onChangeText?: any;
+    onAddPress?: any;
   }) => {
     const uiStore: UIStore = useStores().uiStore;
-
+    const sessionStore: SessionStore = useStores().sessionStore;
     return (
       <Modal
         style={{
@@ -94,12 +100,21 @@ const AddEditModal = observer(
             >
               <Image
                 resizeMode='cover'
-                source={Icon.camera}
-                style={{ width: sizeWidth(20), height: sizeHeight(10) }}
+                source={
+                  sessionStore?.dataImage?.imageData !== undefined
+                    ? { uri: sessionStore?.dataImage?.imageData }
+                    : Icon.camera
+                }
+                style={{
+                  width: sizeWidth(50),
+                  height: undefined,
+                  aspectRatio: 1,
+                }}
               />
             </TouchableOpacity>
             <TextInput
               placeholder={placeholderTxt || 'placeholder'}
+              onChangeText={onChangeText}
               style={{
                 borderWidth: 1,
                 width: '100%',
@@ -113,6 +128,7 @@ const AddEditModal = observer(
               style={{ width: '100%' }}
               title={btnTitle || 'btnTitle'}
               titleStyle={{ fontSize: fontSize(3.5), fontWeight: '600' }}
+              onPress={onAddPress}
             />
           </VStack>
         </VStack>

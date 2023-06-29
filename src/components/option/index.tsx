@@ -1,18 +1,8 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react';
-import ReactNativeModal from 'react-native-modal';
-import { Modal, Stack, VStack } from 'native-base';
-import Swiper from 'react-native-swiper';
-import { sizeWidth, sizeHeight, fontSize } from '../../utils/Utils';
+import { Modal, VStack } from 'native-base';
+import { sizeWidth } from '../../utils/Utils';
 import { Icon } from '../../assets/icons/const';
-import LongButton from '../Button/LongButton';
 import Choice from './choice';
 
 const Option = ({

@@ -30,4 +30,7 @@ export const Icon = {
   update: require('./update.png'),
   updateBlue: require('./update-blue.png'),
   redCancel: require('./red-cancel.png'),
+  updateIcon1: require('./update-icon1.png'),
+  updateIcon2: require('./update-icon2.png'),
+  updateIcon3: require('./update-icon3.png'),
 };

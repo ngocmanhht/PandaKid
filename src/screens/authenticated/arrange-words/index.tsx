@@ -122,11 +122,17 @@ const ArrangeWordsScreen = observer(() => {
             borderColor: '#77A4FF',
             backgroundColor: 'white',
             height: sizeHeight(45),
+            justifyContent: 'center',
+            padding: 10,
           }}
         >
           <FlatList
             data={word}
             numColumns={3}
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              flex: 1,
+            }}
             scrollEnabled={false}
             renderItem={({ item }) => {
               return (

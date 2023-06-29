@@ -9,11 +9,13 @@ import UIStore from '../../stores/ui';
 import useStores from '../../hooks/use-stores';
 import Modal from 'react-native-modal/dist/modal';
 import { requestCameraPermission } from './Permission';
-import { CAMERA_OPTION } from '../add-edit-modal/const';
+import { CAMERA_OPTION, IMAGE_LIBRARY_OPTION } from '../add-edit-modal/const';
 import * as ImagePicker from 'react-native-image-picker';
+import SessionStore from '../../stores/session';
 
 const CameraOption = observer(() => {
   const uiStore: UIStore = useStores().uiStore;
+  const sessionStore: SessionStore = useStores().sessionStore;
   const takePhoto = async () => {
     if (await requestCameraPermission()) {
       ImagePicker.launchCamera(CAMERA_OPTION)
@@ -23,13 +25,34 @@ const CameraOption = observer(() => {
           }
 
           if (!response.errorMessage) {
-            console.log(response?.assets[0]?.base64);
+            // console.log(response?.assets[0]?.base64);
+            sessionStore?.setImageData({
+              imageData: `data:image/jpg;base64,${response?.assets[0].base64}`,
+            });
+            uiStore.hideCameraOption();
           }
         })
         .catch((error) => {
           console.log(error);
         });
     }
+  };
+  const chooseImage = async () => {
+    ImagePicker.launchImageLibrary(IMAGE_LIBRARY_OPTION, (response?: any) => {
+      if (response.didCancel) {
+        console.log('CANCEL');
+      } else {
+        if (!response.errorMessage) {
+          // console.log(response?.assets[0].base64);
+          sessionStore?.setImageData({
+            imageData: `data:image/jpg;base64,${response?.assets[0].base64}`,
+          });
+          uiStore.hideCameraOption();
+        } else {
+          console.log('that bai');
+        }
+      }
+    });
   };
   return (
     <Modal
@@ -72,7 +95,11 @@ const CameraOption = observer(() => {
           source={Icon.cameraOptions}
           title='Chụp ảnh'
         />
-        <Choice source={Icon.libraryOptions} title='Thư viện ảnh' />
+        <Choice
+          onPress={chooseImage}
+          source={Icon.libraryOptions}
+          title='Thư viện ảnh'
+        />
       </VStack>
     </Modal>
   );

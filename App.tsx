@@ -17,6 +17,7 @@ import CameraOption from './src/components/camera-option';
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './src/service/query-client';
 import UpdateModal from './src/components/update-modal';
+import DescriptionUpdateModal from './src/components/description-update-modal';
 
 const App = () => {
   React.useEffect(() => {
@@ -33,6 +34,7 @@ const App = () => {
               <LoadingSpinner />
               <CameraOption />
               <UpdateModal />
+              <DescriptionUpdateModal />
             </NavigationContainer>
           </NativeBaseProvider>
         </Provider>

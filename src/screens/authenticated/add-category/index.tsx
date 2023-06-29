@@ -20,6 +20,12 @@ import AddButton from '../../../components/add-buton';
 import AddEditModal from '../../../components/add-edit-modal';
 import Option from '../../../components/option';
 import { firebase } from '@react-native-firebase/firestore';
+import SessionStore from '../../../stores/session';
+import useStores from '../../../hooks/use-stores';
+import auth from '@react-native-firebase/auth';
+import useCustomToast from '../../../hooks/useToast';
+import UIStore from '../../../stores/ui';
+import firestore from '@react-native-firebase/firestore';
 
 const AddCategory = () => {
   const navigation = useNavigation();
@@ -27,22 +33,81 @@ const AddCategory = () => {
   const [list, setList] = React.useState([]);
   const [addModalVisible, setAddModalVisible] = React.useState(false);
   const [choiceModal, setChoiceModal] = React.useState(false);
-  const handleClick = (index: any) => {
-    if (list.find((item: any) => item === index)) {
-      const newList = list.filter((item: any) => item !== index);
+  const sessionStore: SessionStore = useStores().sessionStore;
+  const uiStore: UIStore = useStores().uiStore;
+  const [text, setText] = React.useState<any>();
+  const [sesssionData, setSesssionData] = React.useState<any>();
+
+  const handleClick = (item: any) => {
+    const index = item?.id;
+    if (list.find((item: any) => item?.id === index)) {
+      const newList = list.filter((item: any) => item?.id !== index);
+
       return setList(newList);
     } else {
-      return setList([...list, index]);
+      return setList([...list, item]);
     }
   };
   const [randomColors, setRandomColors] = React.useState(randomColor());
   const db = firebase.firestore();
-  useEffect(() => {
-    db.collection('userData').doc('chữ cái').collection('chữ cái').add({
-      id: 1,
-      name: 'chữ a',
-    });
-  }, []);
+  const email = auth().currentUser?.email as any;
+  const toast = useCustomToast();
+  const getCurrentId = async () => {
+    const res = await db.collection('Category').get();
+    return res.size + 1;
+  };
+  const onHandleAddPress = async () => {
+    uiStore.showLoading();
+    const currentId = await getCurrentId();
+    db.collection('Category')
+      .doc(text)
+      .set({
+        name: text,
+        url: sessionStore?.dataImage?.imageData,
+        id: currentId,
+        type: email,
+      })
+      .then(() => {
+        console.log('Document successfully written!');
+        toast.show({ type: 'success', msg: 'Thêm thành công' });
+        sessionStore.setImageData({ imageData: undefined });
+        setAddModalVisible(!addModalVisible);
+        uiStore.hideLoading();
+      })
+      .catch((error) => {
+        console.error('Error writing document: ', error);
+        toast.show({ type: 'error', msg: 'Có lỗi' });
+        uiStore.hideLoading();
+      });
+  };
+  const deleteCategory = (nameCategory: any) => {
+    firestore()
+      .collection('Category')
+      .doc(nameCategory)
+      .delete()
+      .then(() => {
+        console.log('User deleted!');
+        toast.show({ type: 'success', msg: 'Xóa thành công' });
+      });
+  };
+  const handleDeletePress = async () => {
+    const isNotIncludeAdminCate = list.filter(
+      (item: any) => item?.type !== 'admin'
+    );
+    if (isNotIncludeAdminCate?.length > 0) {
+      console.log(isNotIncludeAdminCate);
+      isNotIncludeAdminCate.forEach((item: any) => {
+        deleteCategory(item?.name);
+      });
+      setChoiceModal(!choiceModal);
+    } else {
+      console.log(' k xoa dc');
+      toast.show({
+        type: 'error',
+        msg: 'Bạn không thể xóa những mục này',
+      });
+    }
+  };
 
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -75,13 +140,15 @@ const AddCategory = () => {
           renderItem={({ item, index }) => {
             return (
               <TouchableOpacity
-                onPress={() => handleClick(item?.id)}
+                onPress={() => handleClick(item)}
                 activeOpacity={0.2}
               >
                 <BigCard
                   style={{
                     borderWidth: 4,
-                    borderColor: list?.find((items) => items === item?.id)
+                    borderColor: list?.find(
+                      (items: any) => items?.id === item?.id
+                    )
                       ? 'black'
                       : 'white',
                   }}
@@ -96,18 +163,26 @@ const AddCategory = () => {
       </VStack>
       <AddEditModal
         isVisible={addModalVisible}
-        onDismiss={() => setAddModalVisible(!addModalVisible)}
+        onDismiss={() => {
+          setAddModalVisible(!addModalVisible);
+          sessionStore.setImageData({ imageData: undefined });
+        }}
         title='Thêm chủ đề'
         btnTitle='Tạo chủ đề'
         placeholderTxt='Mời nhập chủ đề'
+        onChangeText={(e: any) => setText(e)}
+        onAddPress={onHandleAddPress}
       />
       <Option
         isVisible={choiceModal}
-        onDismiss={() => setChoiceModal(!choiceModal)}
+        onDismiss={() => {
+          setChoiceModal(!choiceModal);
+        }}
         option1Title='Sửa chủ đề'
         option2Title='Xóa chủ đề'
         option3Title='Hủy bỏ'
         onCancelPress={() => setChoiceModal(false)}
+        onDeletePress={handleDeletePress}
       />
     </Container>
   );

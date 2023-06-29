@@ -3,15 +3,12 @@ import React from 'react';
 import { HStack } from 'native-base';
 import { fontSize, sizeWidth } from '../../utils/Utils';
 
-const Choice = ({
-  title,
-  source,
-  onPress,
-}: {
+interface IProps {
   title?: string;
   source?: any;
   onPress?: () => void;
-}) => {
+}
+const Choice = ({ title, source, onPress }: IProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}

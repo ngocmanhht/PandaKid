@@ -35,12 +35,12 @@ const MediumCard = ({
           justifyContent: 'center',
           alignItems: 'center',
           borderWidth: 3,
-          margin: sizeHeight(0.5),
           borderColor: 'white',
           borderRadius: sizeWidth(4),
           backgroundColor: backgroundColor || '#9CAEFF',
-          padding: 10,
-          paddingVertical: 10,
+          padding: 5,
+          width: '30%',
+          marginHorizontal: 5,
         },
       ]}
     >
@@ -60,6 +60,7 @@ const MediumCard = ({
           fontWeight: 'bold',
           paddingTop: 5,
         }}
+        numberOfLines={2}
       >
         {title || 'Test'}
       </Text>
