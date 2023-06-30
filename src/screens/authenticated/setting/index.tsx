@@ -8,19 +8,20 @@ import Header from '../../../components/header';
 import LongButton from '../../../components/Button/LongButton';
 import ExitButton from './buton';
 import ConfirmModal from '../../../components/confirm-modal';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import { Icon } from '../../../assets/icons/const';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
+import SessionStore from '../../../stores/session';
 const SettingScreen = () => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const navigation = useNavigation();
-
-  const typeAccount = auth().currentUser?.displayName;
+  const [typeOfAccount, setTypeOfAccount] = React.useState<any>();
   const uiStore: UIStore = useStores().uiStore;
+  const sessionStore: SessionStore = useStores().sessionStore;
 
   const handleLogout = () => {
     navigation.reset({
@@ -29,8 +30,19 @@ const SettingScreen = () => {
     });
     AsyncStorage.removeItem('access_token');
     AsyncStorage.removeItem('type_account');
+    sessionStore.setData({ storage: [] });
   };
   const email = auth().currentUser?.email;
+  const getTypeOfAccount = async () => {
+    const typeAccount = (await auth().currentUser?.displayName) as any;
+    setTypeOfAccount(typeAccount);
+  };
+  const isFocused = useIsFocused();
+  React.useEffect(() => {
+    if (isFocused) {
+      getTypeOfAccount();
+    }
+  }, [isFocused]);
 
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -49,7 +61,7 @@ const SettingScreen = () => {
       >
         <Image
           source={
-            typeAccount === 'Basic' ? images.Avatar : images.PremiumAvatar
+            typeOfAccount === 'Basic' ? images.Avatar : images.PremiumAvatar
           }
           style={{ width: 100, height: 100, alignSelf: 'center' }}
           resizeMode='contain'
@@ -63,7 +75,7 @@ const SettingScreen = () => {
       </VStack>
 
       <VStack margin={5} space={1}>
-        {typeAccount === 'Basic' && (
+        {typeOfAccount === 'Basic' && (
           <ExitButton
             onPress={() => uiStore.showDescriptionUpdateModal()}
             title={'Nâng cấp tài khoản'}

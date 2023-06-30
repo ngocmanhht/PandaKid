@@ -45,10 +45,12 @@ const useLogicWords = () => {
     if (item?.soundUrl) {
       playSound(item?.soundUrl);
     } else {
+      const text = encodeURI(item?.key);
       const urls = await getVoiceUrl(item?.key);
       setTimeout(() => {
         playSound(urls);
-      }, 2000);
+      }, 3000);
+      // console.log(item?.key);
     }
   };
   return { playSound, handlePlaySound };

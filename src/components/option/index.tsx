@@ -40,14 +40,14 @@ const Option = ({
     >
       <VStack
         style={{
-          width: sizeWidth(80),
+          width: sizeWidth(100),
           //   height: sizeHeight(55),
           borderRadius: sizeWidth(2),
           backgroundColor: 'white',
           alignSelf: 'center',
           paddingVertical: 20,
           paddingHorizontal: 20,
-          marginBottom: 10,
+          // marginBottom: 10,
         }}
         space={3}
       >

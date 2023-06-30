@@ -48,7 +48,7 @@ const BigCardWithVoice = ({
           borderRadius: sizeWidth(4),
           alignSelf: 'center',
         }}
-        resizeMode='contain'
+        resizeMode='cover'
       />
       <TouchableOpacity onPress={onPressVoiceIcon}>
         <Image

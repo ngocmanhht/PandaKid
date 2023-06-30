@@ -17,10 +17,25 @@ import LongButton from '../Button/LongButton';
 import UIStore from '../../stores/ui';
 import useStores from '../../hooks/use-stores';
 import { observer } from 'mobx-react';
+import ConfirmModal from '../confirm-modal';
+import useCustomToast from '../../hooks/useToast';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DescriptionUpdateModal = observer(() => {
   const [value, setValue] = React.useState('1');
   const uiStore: UIStore = useStores().uiStore;
+  const [confirmModal, setConfirmModal] = React.useState(false);
+  const toast = useCustomToast();
+  const onConfirmBuy = () => {
+    auth().currentUser?.updateProfile({
+      displayName: 'Premium',
+    });
+    uiStore.hideDescriptionUpdateModal();
+    AsyncStorage.setItem('type_account', 'Premium');
+    toast.show({ type: 'success', msg: 'Thanh toán thành công' });
+    setConfirmModal(!confirmModal);
+  };
   return (
     <Modal
       style={{
@@ -119,6 +134,7 @@ const DescriptionUpdateModal = observer(() => {
                   fontWeight: '600',
                   fontSize: 15,
                 }}
+                onPress={() => setConfirmModal(!confirmModal)}
                 title='Nâng cấp'
                 style={{ width: '100%' }}
               />
@@ -126,6 +142,17 @@ const DescriptionUpdateModal = observer(() => {
           </SafeAreaView>
         </ImageBackground>
       </View>
+      <ConfirmModal
+        isVisible={confirmModal}
+        onDismiss={() => setConfirmModal(!confirmModal)}
+        onConfirmPress={onConfirmBuy}
+        title='Thông báo'
+        title1={
+          value === '1'
+            ? 'Xác nhận thanh toán 279.000đ để nâng cấp lên tài khoản Premium?'
+            : 'Xác nhận thanh toán 30.000đ/tháng để nâng cấp lên tài khoản Premium?'
+        }
+      />
     </Modal>
   );
 });

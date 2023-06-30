@@ -43,7 +43,7 @@ const WordScreen = () => {
       .collection('Category')
       .doc(route?.params?.title)
       .collection(route?.params?.title)
-      .orderBy('id', 'asc')
+      .orderBy('id', 'desc')
       .onSnapshot((querySnapshot) => {
         const users: any = [];
 
@@ -109,7 +109,7 @@ const WordScreen = () => {
                 onPressVoiceIcon={() => {
                   handlePlaySound(item);
                 }}
-                title={item?.key}
+                title={item?.type === 'admin' ? item?.key : item?.name}
                 source={{ uri: item.url }}
               />
             </TouchableOpacity>

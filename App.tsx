@@ -18,8 +18,10 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './src/service/query-client';
 import UpdateModal from './src/components/update-modal';
 import DescriptionUpdateModal from './src/components/description-update-modal';
+import { LogBox } from 'react-native';
 
 const App = () => {
+  LogBox.ignoreAllLogs();
   React.useEffect(() => {
     SplashScreen.hide();
   }, []);

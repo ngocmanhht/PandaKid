@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 import { observer } from 'mobx-react';
 import SessionStore from '../../../stores/session';
 import useStores from '../../../hooks/use-stores';
+import { sizeHeight } from '../../../utils/Utils';
 
 const StorageWord = observer(() => {
   // const data = [
@@ -42,24 +43,36 @@ const StorageWord = observer(() => {
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header visible={false} title='Kho ghép từ' />
-      <VStack space={3} style={{ padding: 10 }}>
+      <VStack space={3} style={{ paddingVertical: 20, paddingHorizontal: 10 }}>
         <AddButton
           onPress={() => navigation.navigate(Screens.AddWordToStorage as never)}
           title='Thêm từ vào kho'
         />
-        <FlatList
-          data={data}
-          numColumns={3}
-          renderItem={({ item, index }) => {
-            return (
-              <MediumCard
-                source={{ uri: item?.url }}
-                disabled={true}
-                title={item?.key}
-              />
-            );
+        <View
+          style={{
+            height: sizeHeight(72),
+            paddingHorizontal: 10,
           }}
-        />
+        >
+          <FlatList
+            data={data}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            snapToEnd={true}
+            contentContainerStyle={{
+              gap: 5,
+            }}
+            renderItem={({ item, index }) => {
+              return (
+                <MediumCard
+                  source={{ uri: item?.url }}
+                  disabled={true}
+                  title={item?.key}
+                />
+              );
+            }}
+          />
+        </View>
       </VStack>
     </Container>
   );

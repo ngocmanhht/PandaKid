@@ -7,12 +7,15 @@ const ConfirmModal = ({
   isVisible,
   onDismiss,
   title,
+  title1,
+
   btnTitle,
   onConfirmPress,
 }: {
   isVisible?: any;
   onDismiss?: () => void;
   title?: string;
+  title1?: string;
   btnTitle?: string;
   onConfirmPress?: () => void;
 }) => {
@@ -43,7 +46,7 @@ const ConfirmModal = ({
           //   style={{ paddingHorizontal: 10, paddingVertical: 10 }}
           alignItems={'flex-end'}
           alignSelf={'center'}
-          w={'80%'}
+          w={'90%'}
         >
           <TouchableOpacity onPress={onDismiss}>
             <Text style={{ fontSize: fontSize(4), fontWeight: 'bold' }}>X</Text>
@@ -52,7 +55,7 @@ const ConfirmModal = ({
         <VStack
           space={5}
           style={{
-            width: '80%',
+            width: '90%',
             alignSelf: 'center',
             alignItems: 'center',
           }}
@@ -66,7 +69,20 @@ const ConfirmModal = ({
           >
             {title || 'title'}
           </Text>
-          <HStack w={'100%'} justifyContent={'space-between'}>
+          {title1 && (
+            <Text
+              style={{
+                color: '#354853',
+                fontSize: fontSize(4),
+                fontWeight: '600',
+                textAlign: 'center',
+              }}
+            >
+              {title1 || 'title'}
+            </Text>
+          )}
+
+          <HStack w={'90%'} justifyContent={'space-between'}>
             <Button
               btnTitle='Hủy'
               backgroundColor={'white'}

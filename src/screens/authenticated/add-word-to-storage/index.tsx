@@ -14,11 +14,14 @@ import useStores from '../../../hooks/use-stores';
 import firestore from '@react-native-firebase/firestore';
 import SessionStore from '../../../stores/session';
 import useCustomToast from '../../../hooks/useToast';
+import auth from '@react-native-firebase/auth';
 
 const AddWordToStorage = () => {
   const uiStore: UIStore = useStores().uiStore;
   const toast = useCustomToast();
   const [data, setData] = React.useState<any>([]);
+  const email = auth().currentUser?.email as any;
+
   React.useEffect(() => {
     uiStore.showLoading();
     firestore()
@@ -26,10 +29,15 @@ const AddWordToStorage = () => {
       .onSnapshot((querySnapshot) => {
         const users: any = [];
         querySnapshot.forEach((documentSnapshot) => {
-          users.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          if (
+            documentSnapshot?.data()?.type === 'admin' ||
+            documentSnapshot?.data()?.type === email
+          ) {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
+          }
         });
         setData(users);
         uiStore.hideLoading();

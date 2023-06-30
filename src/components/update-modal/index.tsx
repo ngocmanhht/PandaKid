@@ -68,7 +68,13 @@ const UpdateModal = observer(
               source={Icon.redCancel}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{ alignSelf: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              uiStore.showDescriptionUpdateModal();
+              uiStore.hideUpdateModal();
+            }}
+            style={{ alignSelf: 'center' }}
+          >
             <Image
               style={{
                 width: sizeWidth(30),

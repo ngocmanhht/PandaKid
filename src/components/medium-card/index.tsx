@@ -59,6 +59,7 @@ const MediumCard = ({
           color: 'white',
           fontWeight: 'bold',
           paddingTop: 5,
+          textAlign: 'center',
         }}
         numberOfLines={2}
       >

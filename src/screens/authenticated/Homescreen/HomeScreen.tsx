@@ -48,6 +48,7 @@ const HomeScreen = () => {
     }, 3000);
     const subscriber = firestore()
       .collection('Category')
+      .orderBy('id', 'desc')
       .onSnapshot((querySnapshot) => {
         const users: any = [];
 
@@ -126,7 +127,7 @@ const HomeScreen = () => {
               >
                 <BigCard
                   source={{ uri: item?.url }}
-                  title={item?.key}
+                  title={item?.type === 'admin' ? item?.key : item?.name}
                   backgroundColor={randomColor()}
                 />
               </TouchableOpacity>

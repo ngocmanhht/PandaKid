@@ -24,12 +24,12 @@ const Choice = ({ title, source, onPress }: IProps) => {
         {source && (
           <Image
             source={source}
-            style={{ width: 20, height: 20 }}
+            style={{ width: 25, height: 25 }}
             resizeMode='cover'
           />
         )}
 
-        <Text style={{ color: '#354853', fontSize: fontSize(3) }}>
+        <Text style={{ color: '#354853', fontSize: fontSize(3.5) }}>
           {title || 'title'}
         </Text>
       </HStack>

@@ -155,10 +155,13 @@ const ArrangeWordsScreen = observer(() => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{ height: '42%' }}>
+        <View style={{ height: '42%', paddingTop: 5 }}>
           <FlatList
             data={data}
             numColumns={3}
+            contentContainerStyle={{
+              gap: 5,
+            }}
             renderItem={({ item, index }) => {
               return (
                 <MediumCard

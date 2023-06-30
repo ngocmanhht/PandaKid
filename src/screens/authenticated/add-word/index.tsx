@@ -36,6 +36,7 @@ const AddWord = () => {
   const [text, setText] = React.useState<any>();
   const sessionStore: SessionStore = useStores().sessionStore;
   const uiStore: UIStore = useStores().uiStore;
+  const [data, setData] = React.useState<any>(route.params?.data);
   const handleClick = (item: any) => {
     const index = item?.id;
     if (list.find((item: any) => item?.id === index)) {
@@ -47,46 +48,36 @@ const AddWord = () => {
     }
   };
   const [randomColors, setRandomColors] = React.useState(randomColor());
+  const [isEditMode, setIsEditMode] = React.useState(false);
   const color = randomColor();
   const db = firebase.firestore();
   const email = auth().currentUser?.email as any;
   const toast = useCustomToast();
-  const getCurrentId = async (text: any) => {
-    const res = await db
-      .collection('Category')
-      .doc(text)
-      .collection(text)
-      .get();
-    return res.size + 1;
-  };
-  const onHandleAddPress = async () => {
-    // console.log(route?.params?.title);
-    uiStore.showLoading();
 
-    // console.log(currentId);
+  const onHandleAddPress = async () => {
+    const tmpData = {
+      name: text,
+      url: sessionStore?.dataImage?.imageData,
+      id: new Date().getTime(),
+      type: email,
+    };
     if (sessionStore?.dataImage?.imageData !== undefined && text) {
-      const currentId = await getCurrentId(route?.params?.title);
       db.collection('Category')
         .doc(route?.params?.title)
         .collection(route?.params?.title)
         .doc(text)
-        .set({
-          name: text,
-          url: sessionStore?.dataImage?.imageData,
-          id: currentId,
-          type: email,
-        })
+        .set(tmpData)
         .then(() => {
           console.log('Document successfully written!');
           toast.show({ type: 'success', msg: 'Thêm thành công' });
           sessionStore.setImageData({ imageData: undefined });
           setAddModalVisible(!addModalVisible);
-          uiStore.hideLoading();
+          setData([...data, tmpData]);
+          setText('');
         })
         .catch((error) => {
           console.error('Error writing document: ', error);
           toast.show({ type: 'error', msg: 'Có lỗi' });
-          uiStore.hideLoading();
         });
     } else {
       toast.show({ type: 'error', msg: 'Hoàn thành các trường còn thiếu' });
@@ -100,7 +91,7 @@ const AddWord = () => {
       .doc(nameWord)
       .delete()
       .then(() => {
-        console.log('User deleted!');
+        // console.log('User deleted!');
         toast.show({ type: 'success', msg: 'Xóa thành công' });
       });
   };
@@ -115,15 +106,59 @@ const AddWord = () => {
       });
       setChoiceModal(!choiceModal);
     } else {
-      console.log(' k xoa dc');
+      // console.log(' k xoa dc');
       setChoiceModal(!choiceModal);
 
       return toast.show({
         type: 'error',
-        msg: 'Bạn không thể xóa những mục này',
+        msg: 'Bạn không có quyền xóa từ này',
       });
     }
     return toast.show({ type: 'success', msg: 'Xóa thành công' });
+  };
+  const onEditPress = () => {
+    if (list.length > 1) {
+      toast.show({
+        type: 'error',
+        msg: 'Bạn chỉ được chọn 1 từ để sửa',
+      });
+    } else {
+      if (list[0]?.type === 'admin') {
+        toast.show({
+          type: 'error',
+          msg: 'Bạn không có quyền sửa từ này',
+        });
+      } else {
+        setChoiceModal(!choiceModal);
+        setAddModalVisible(!addModalVisible);
+        setIsEditMode(!isEditMode);
+        setText(list[0]?.name);
+        sessionStore?.setImageData({ imageData: list[0]?.url });
+      }
+    }
+  };
+  const onHandleEditPress = () => {
+    firestore()
+      .collection('Category')
+      .doc(route?.params?.title)
+      .collection(route?.params?.title)
+      .doc(list[0]?.key)
+      .update({
+        name: text,
+        url: sessionStore?.dataImage?.imageData,
+      })
+      .then(() => {
+        console.log('Document successfully written!');
+        navigation.goBack();
+        toast.show({ type: 'success', msg: 'Sửa thành công' });
+        sessionStore.setImageData({ imageData: undefined });
+        setAddModalVisible(!addModalVisible);
+        setText('');
+      })
+      .catch((error) => {
+        console.error('Error writing document: ', error);
+        toast.show({ type: 'error', msg: 'Có lỗi' });
+      });
   };
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -131,7 +166,9 @@ const AddWord = () => {
         rightIconSource={Icon.option}
         rightIconShown={list.length !== 0 ? true : false}
         onBackPress={() => navigation.goBack()}
-        rightOnpress={() => setChoiceModal(!choiceModal)}
+        rightOnpress={() => {
+          setChoiceModal(!choiceModal);
+        }}
         title='Thêm từ'
       />
       <VStack
@@ -140,11 +177,14 @@ const AddWord = () => {
         style={{ paddingHorizontal: 10, paddingVertical: 20 }}
       >
         <AddButton
-          onPress={() => setAddModalVisible(!addModalVisible)}
+          onPress={() => {
+            setAddModalVisible(!addModalVisible);
+            setIsEditMode(false);
+          }}
           title='Thêm từ'
         />
         <FlatList
-          data={route.params?.data}
+          data={data}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           snapToEnd={true}
@@ -166,7 +206,7 @@ const AddWord = () => {
                       ? 'black'
                       : 'white',
                   }}
-                  title={item?.key}
+                  title={item?.type === 'admin' ? item?.key : item?.name}
                   backgroundColor={randomColors}
                   source={{ uri: item?.url }}
                 />
@@ -187,6 +227,10 @@ const AddWord = () => {
         placeholderTxt='Nhập từ cần thêm'
         onChangeText={(e: any) => setText(e)}
         onAddPress={onHandleAddPress}
+        initalValue={text}
+        type={isEditMode ? 'edit' : 'add'}
+        btnEditTitle='Sửa từ'
+        onEditPress={onHandleEditPress}
       />
       <Option
         isVisible={choiceModal}
@@ -196,6 +240,7 @@ const AddWord = () => {
         option3Title='Hủy bỏ'
         onCancelPress={() => setChoiceModal(false)}
         onDeletePress={onHandleDeletePress}
+        onEditPress={onEditPress}
       />
     </Container>
   );

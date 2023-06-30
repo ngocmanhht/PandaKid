@@ -30,7 +30,7 @@ const WordModal = ({
   onIndexChange?: (e: any) => void;
 }) => {
   // const [indexs, setIndex] = React.useState(0);
-  const { playSound } = useLogicWords();
+  const { playSound, handlePlaySound } = useLogicWords();
   // React.useEffect(() => {
   //   setIndex(index);
   //   console.log('data', data);
@@ -89,8 +89,14 @@ const WordModal = ({
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: fontSize(6), fontWeight: '600' }}>
-                  {item?.key}
+                <Text
+                  style={{
+                    fontSize: fontSize(6),
+                    fontWeight: '600',
+                    color: 'white',
+                  }}
+                >
+                  {item?.type === 'admin' ? item?.key : item?.name}
                 </Text>
 
                 <Image
@@ -100,9 +106,9 @@ const WordModal = ({
                     width: sizeWidth(60),
                     height: sizeHeight(30),
                   }}
-                  resizeMode='contain'
+                  resizeMode='cover'
                 />
-                <TouchableOpacity onPress={() => playSound(item?.soundUrl)}>
+                <TouchableOpacity onPress={() => handlePlaySound(item)}>
                   <Image
                     source={Icon.voice}
                     resizeMode='cover'

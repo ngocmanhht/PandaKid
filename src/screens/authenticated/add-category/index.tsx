@@ -37,6 +37,7 @@ const AddCategory = () => {
   const uiStore: UIStore = useStores().uiStore;
   const [text, setText] = React.useState<any>();
   const [sesssionData, setSesssionData] = React.useState<any>();
+  const [data, setData] = React.useState<any>(route.params?.data);
 
   const handleClick = (item: any) => {
     const index = item?.id;
@@ -52,28 +53,26 @@ const AddCategory = () => {
   const db = firebase.firestore();
   const email = auth().currentUser?.email as any;
   const toast = useCustomToast();
-  const getCurrentId = async () => {
-    const res = await db.collection('Category').get();
-    return res.size + 1;
-  };
+  const [isEditMode, setIsEditMode] = React.useState(false);
+
   const onHandleAddPress = async () => {
-    uiStore.showLoading();
-    const currentId = await getCurrentId();
+    const tmpData = {
+      name: text,
+      url: sessionStore?.dataImage?.imageData,
+      id: new Date().getTime(),
+      type: email,
+    };
     if (sessionStore?.dataImage?.imageData !== undefined && text) {
       db.collection('Category')
         .doc(text)
-        .set({
-          name: text,
-          url: sessionStore?.dataImage?.imageData,
-          id: currentId,
-          type: email,
-        })
+        .set(tmpData)
         .then(() => {
           console.log('Document successfully written!');
           toast.show({ type: 'success', msg: 'Thêm thành công' });
           sessionStore.setImageData({ imageData: undefined });
           setAddModalVisible(!addModalVisible);
           uiStore.hideLoading();
+          setData([...data, tmpData]);
         })
         .catch((error) => {
           console.error('Error writing document: ', error);
@@ -83,7 +82,9 @@ const AddCategory = () => {
     } else {
       toast.show({ type: 'error', msg: 'Hoàn thành các trường còn thiếu' });
     }
+    // console.log(sessionStore?.dataImage?.imageData);
   };
+
   const deleteCategory = (nameCategory: any) => {
     firestore()
       .collection('Category')
@@ -113,7 +114,54 @@ const AddCategory = () => {
     }
     return toast.show({ type: 'success', msg: 'Xóa thành công' });
   };
-
+  const onEditPress = () => {
+    if (list.length > 1) {
+      toast.show({
+        type: 'error',
+        msg: 'Bạn chỉ được chọn 1 chủ đề để sửa',
+      });
+    } else {
+      if (list[0]?.type === 'admin') {
+        toast.show({
+          type: 'error',
+          msg: 'Bạn không có quyền sửa chủ đề này',
+        });
+      } else {
+        setChoiceModal(!choiceModal);
+        setAddModalVisible(!addModalVisible);
+        setIsEditMode(!isEditMode);
+        setText(list[0]?.name);
+        sessionStore?.setImageData({ imageData: list[0]?.url });
+      }
+    }
+  };
+  const onHandleEditPress = () => {
+    const tmpData = {
+      name: text,
+      url: sessionStore?.dataImage?.imageData,
+      id: new Date().getTime(),
+      type: email,
+    };
+    firestore()
+      .collection('Category')
+      .doc(list[0]?.key)
+      .update({
+        name: text,
+        url: sessionStore?.dataImage?.imageData,
+      })
+      .then(() => {
+        console.log('Document successfully written!');
+        navigation.goBack();
+        toast.show({ type: 'success', msg: 'Sửa thành công' });
+        sessionStore.setImageData({ imageData: undefined });
+        setAddModalVisible(!addModalVisible);
+        setText('');
+      })
+      .catch((error) => {
+        console.error('Error writing document: ', error);
+        toast.show({ type: 'error', msg: 'Có lỗi' });
+      });
+  };
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header
@@ -129,11 +177,14 @@ const AddCategory = () => {
         style={{ paddingHorizontal: 10, paddingVertical: 20 }}
       >
         <AddButton
-          onPress={() => setAddModalVisible(!addModalVisible)}
+          onPress={() => {
+            setAddModalVisible(!addModalVisible);
+            setIsEditMode(false);
+          }}
           title='Thêm chủ đề'
         />
         <FlatList
-          data={route.params?.data}
+          data={data}
           numColumns={2}
           showsVerticalScrollIndicator={false}
           snapToEnd={true}
@@ -157,7 +208,7 @@ const AddCategory = () => {
                       ? 'black'
                       : 'white',
                   }}
-                  title={item?.key}
+                  title={item?.type === 'admin' ? item?.key : item?.name}
                   backgroundColor={randomColors}
                   source={{ uri: item?.url }}
                 />
@@ -178,6 +229,10 @@ const AddCategory = () => {
         placeholderTxt='Mời nhập chủ đề'
         onChangeText={(e: any) => setText(e)}
         onAddPress={onHandleAddPress}
+        initalValue={text}
+        type={isEditMode ? 'edit' : 'add'}
+        btnEditTitle='Sửa chủ đề'
+        onEditPress={onHandleEditPress}
       />
       <Option
         isVisible={choiceModal}
@@ -189,6 +244,7 @@ const AddCategory = () => {
         option3Title='Hủy bỏ'
         onCancelPress={() => setChoiceModal(false)}
         onDeletePress={handleDeletePress}
+        onEditPress={onEditPress}
       />
     </Container>
   );
