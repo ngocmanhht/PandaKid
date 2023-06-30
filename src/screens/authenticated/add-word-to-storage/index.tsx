@@ -13,10 +13,11 @@ import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import firestore from '@react-native-firebase/firestore';
 import SessionStore from '../../../stores/session';
+import useCustomToast from '../../../hooks/useToast';
 
 const AddWordToStorage = () => {
   const uiStore: UIStore = useStores().uiStore;
-
+  const toast = useCustomToast();
   const [data, setData] = React.useState<any>([]);
   React.useEffect(() => {
     uiStore.showLoading();
@@ -48,16 +49,20 @@ const AddWordToStorage = () => {
     // console.log(storageWordData);
     // const newDta
     const sessionStores = sessionStore?.storageWords?.storage as any;
-    if (sessionStores?.length > 0) {
-      sessionStore.setData({
-        storage: [...sessionStores, ...storageWordData],
-      });
-      navigation.goBack();
+    if (storageWordData.length > 0) {
+      if (sessionStores?.length > 0) {
+        sessionStore.setData({
+          storage: [...sessionStores, ...storageWordData],
+        });
+        navigation.goBack();
+      } else {
+        sessionStore.setData({
+          storage: [...storageWordData],
+        });
+        navigation.goBack();
+      }
     } else {
-      sessionStore.setData({
-        storage: [...storageWordData],
-      });
-      navigation.goBack();
+      toast.show({ type: 'error', msg: 'Hãy thêm từ trước khi hoàn tất' });
     }
   };
   return (

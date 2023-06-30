@@ -18,6 +18,7 @@ import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import useLogicWords from './useLogicWords';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import auth from '@react-native-firebase/auth';
 
 const WordScreen = () => {
   const route = useRoute();
@@ -26,8 +27,9 @@ const WordScreen = () => {
   const [data, setData] = React.useState([]);
   const [isVisibleModal, setIsVisibleModal] = React.useState(false);
   const [swiperIndex, setSwiperIndex] = React.useState(0);
-  const { playSound } = useLogicWords();
+  const { playSound, handlePlaySound } = useLogicWords();
   const uiStore: UIStore = useStores().uiStore;
+  const email = auth().currentUser?.email as any;
   const isBasicAccount = async () => {
     const typeAccount = await AsyncStorage.getItem('type_account');
     if (JSON.parse(typeAccount) === 'Basic') {
@@ -46,10 +48,15 @@ const WordScreen = () => {
         const users: any = [];
 
         querySnapshot.forEach((documentSnapshot) => {
-          users.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
+          if (
+            documentSnapshot?.data()?.type === 'admin' ||
+            documentSnapshot?.data()?.type === email
+          ) {
+            users.push({
+              ...documentSnapshot.data(),
+              key: documentSnapshot.id,
+            });
+          }
         });
         setData(users);
         uiStore.hideLoading();
@@ -61,7 +68,10 @@ const WordScreen = () => {
     if (await isBasicAccount()) {
       uiStore.showUpdateModal();
     } else {
-      navigation.navigate(Screens.AddWord as never, { data: data } as never);
+      navigation.navigate(
+        Screens.AddWord as never,
+        { data: data, title: route?.params?.title } as never
+      );
     }
   };
   return (
@@ -97,7 +107,7 @@ const WordScreen = () => {
               <BigCardWithVoice
                 key={index}
                 onPressVoiceIcon={() => {
-                  playSound(item?.soundUrl);
+                  handlePlaySound(item);
                 }}
                 title={item?.key}
                 source={{ uri: item.url }}

@@ -38,7 +38,7 @@ const SettingScreen = () => {
       <VStack
         marginTop={sizeHeight(8)}
         w={'90%'}
-        padding={10}
+        style={{ paddingVertical: 20 }}
         alignSelf={'center'}
         borderWidth={3}
         borderColor={'white'}

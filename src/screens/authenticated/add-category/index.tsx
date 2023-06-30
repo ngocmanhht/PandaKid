@@ -59,26 +59,30 @@ const AddCategory = () => {
   const onHandleAddPress = async () => {
     uiStore.showLoading();
     const currentId = await getCurrentId();
-    db.collection('Category')
-      .doc(text)
-      .set({
-        name: text,
-        url: sessionStore?.dataImage?.imageData,
-        id: currentId,
-        type: email,
-      })
-      .then(() => {
-        console.log('Document successfully written!');
-        toast.show({ type: 'success', msg: 'Thêm thành công' });
-        sessionStore.setImageData({ imageData: undefined });
-        setAddModalVisible(!addModalVisible);
-        uiStore.hideLoading();
-      })
-      .catch((error) => {
-        console.error('Error writing document: ', error);
-        toast.show({ type: 'error', msg: 'Có lỗi' });
-        uiStore.hideLoading();
-      });
+    if (sessionStore?.dataImage?.imageData !== undefined && text) {
+      db.collection('Category')
+        .doc(text)
+        .set({
+          name: text,
+          url: sessionStore?.dataImage?.imageData,
+          id: currentId,
+          type: email,
+        })
+        .then(() => {
+          console.log('Document successfully written!');
+          toast.show({ type: 'success', msg: 'Thêm thành công' });
+          sessionStore.setImageData({ imageData: undefined });
+          setAddModalVisible(!addModalVisible);
+          uiStore.hideLoading();
+        })
+        .catch((error) => {
+          console.error('Error writing document: ', error);
+          toast.show({ type: 'error', msg: 'Có lỗi' });
+          uiStore.hideLoading();
+        });
+    } else {
+      toast.show({ type: 'error', msg: 'Hoàn thành các trường còn thiếu' });
+    }
   };
   const deleteCategory = (nameCategory: any) => {
     firestore()
@@ -102,11 +106,12 @@ const AddCategory = () => {
       setChoiceModal(!choiceModal);
     } else {
       console.log(' k xoa dc');
-      toast.show({
+      return toast.show({
         type: 'error',
         msg: 'Bạn không thể xóa những mục này',
       });
     }
+    return toast.show({ type: 'success', msg: 'Xóa thành công' });
   };
 
   return (
@@ -166,6 +171,7 @@ const AddCategory = () => {
         onDismiss={() => {
           setAddModalVisible(!addModalVisible);
           sessionStore.setImageData({ imageData: undefined });
+          setText('');
         }}
         title='Thêm chủ đề'
         btnTitle='Tạo chủ đề'

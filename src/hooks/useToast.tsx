@@ -18,6 +18,7 @@ const useCustomToast = () => {
       render: () => {
         return <Toast type={type} message={msg} />;
       },
+      duration: 2000,
     });
   };
 
