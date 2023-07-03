@@ -73,11 +73,11 @@ const AddCategory = () => {
           setAddModalVisible(!addModalVisible);
           uiStore.hideLoading();
           setData([...data, tmpData]);
+          navigation.goBack();
         })
         .catch((error) => {
           console.error('Error writing document: ', error);
           toast.show({ type: 'error', msg: 'Có lỗi' });
-          uiStore.hideLoading();
         });
     } else {
       toast.show({ type: 'error', msg: 'Hoàn thành các trường còn thiếu' });
@@ -92,7 +92,7 @@ const AddCategory = () => {
       .delete()
       .then(() => {
         console.log('User deleted!');
-        toast.show({ type: 'success', msg: 'Xóa thành công' });
+        // toast.show({ type: 'success', msg: 'Xóa thành công' });
       });
   };
   const handleDeletePress = async () => {
@@ -102,7 +102,7 @@ const AddCategory = () => {
     if (isNotIncludeAdminCate?.length > 0) {
       console.log(isNotIncludeAdminCate);
       isNotIncludeAdminCate.forEach((item: any) => {
-        deleteCategory(item?.name);
+        deleteCategory(item?.key);
       });
       setChoiceModal(!choiceModal);
     } else {
@@ -112,6 +112,7 @@ const AddCategory = () => {
         msg: 'Bạn không thể xóa những mục này',
       });
     }
+    navigation.goBack();
     return toast.show({ type: 'success', msg: 'Xóa thành công' });
   };
   const onEditPress = () => {
@@ -129,19 +130,13 @@ const AddCategory = () => {
       } else {
         setChoiceModal(!choiceModal);
         setAddModalVisible(!addModalVisible);
-        setIsEditMode(!isEditMode);
+        setIsEditMode(true);
         setText(list[0]?.name);
         sessionStore?.setImageData({ imageData: list[0]?.url });
       }
     }
   };
   const onHandleEditPress = () => {
-    const tmpData = {
-      name: text,
-      url: sessionStore?.dataImage?.imageData,
-      id: new Date().getTime(),
-      type: email,
-    };
     firestore()
       .collection('Category')
       .doc(list[0]?.key)
@@ -224,7 +219,7 @@ const AddCategory = () => {
           sessionStore.setImageData({ imageData: undefined });
           setText('');
         }}
-        title='Thêm chủ đề'
+        title='Chủ đề'
         btnTitle='Tạo chủ đề'
         placeholderTxt='Mời nhập chủ đề'
         onChangeText={(e: any) => setText(e)}

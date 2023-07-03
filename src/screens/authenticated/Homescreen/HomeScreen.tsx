@@ -66,7 +66,7 @@ const HomeScreen = () => {
         setData(users);
         uiStore.hideLoading();
       });
-    // console.log(data);
+    console.log(data);
 
     // Unsubscribe from events when no longer in use
     return () => subscriber();
@@ -83,6 +83,8 @@ const HomeScreen = () => {
         Screens.AddCategory as never,
         { data: data } as never
       );
+      const typeAccount = await AsyncStorage.getItem('type_account');
+      console.log(typeAccount);
     }
   };
   const loadMore = () => {};

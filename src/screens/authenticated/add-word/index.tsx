@@ -74,6 +74,7 @@ const AddWord = () => {
           setAddModalVisible(!addModalVisible);
           setData([...data, tmpData]);
           setText('');
+          navigation.goBack();
         })
         .catch((error) => {
           console.error('Error writing document: ', error);
@@ -91,8 +92,7 @@ const AddWord = () => {
       .doc(nameWord)
       .delete()
       .then(() => {
-        // console.log('User deleted!');
-        toast.show({ type: 'success', msg: 'Xóa thành công' });
+        console.log('User deleted!');
       });
   };
   const onHandleDeletePress = () => {
@@ -102,18 +102,19 @@ const AddWord = () => {
     if (isNotIncludeAdminCate?.length > 0) {
       console.log(isNotIncludeAdminCate);
       isNotIncludeAdminCate.forEach((item: any) => {
-        deleteWord(item?.name);
+        deleteWord(item?.key);
       });
       setChoiceModal(!choiceModal);
     } else {
       // console.log(' k xoa dc');
       setChoiceModal(!choiceModal);
-
       return toast.show({
         type: 'error',
         msg: 'Bạn không có quyền xóa từ này',
       });
     }
+
+    navigation.goBack();
     return toast.show({ type: 'success', msg: 'Xóa thành công' });
   };
   const onEditPress = () => {

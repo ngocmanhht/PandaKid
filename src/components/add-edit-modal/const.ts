@@ -13,7 +13,7 @@ export const CAMERA_OPTION: ImagePicker.CameraOptions = {
   mediaType: 'photo',
   cameraType: 'back',
   includeBase64: true,
-  maxWidth: 1024,
-  maxHeight: 1024,
+  maxWidth: 512,
+  maxHeight: 512,
   quality: 0.5,
 };

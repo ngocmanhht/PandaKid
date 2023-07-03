@@ -21,6 +21,7 @@ import ConfirmModal from '../confirm-modal';
 import useCustomToast from '../../hooks/useToast';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import asyncStorageService from '../../service/async-storage';
 
 const DescriptionUpdateModal = observer(() => {
   const [value, setValue] = React.useState('1');
@@ -32,7 +33,7 @@ const DescriptionUpdateModal = observer(() => {
       displayName: 'Premium',
     });
     uiStore.hideDescriptionUpdateModal();
-    AsyncStorage.setItem('type_account', 'Premium');
+    asyncStorageService.setTypeAccount('Premium');
     toast.show({ type: 'success', msg: 'Thanh toán thành công' });
     setConfirmModal(!confirmModal);
   };
