@@ -165,7 +165,7 @@ const AddWord = () => {
     <Container backgroundSource={images.MainBackground}>
       <Header
         rightIconSource={Icon.option}
-        rightIconShown={list.length !== 0 ? true : false}
+        rightIconShown={list.length !== 0}
         onBackPress={() => navigation.goBack()}
         rightOnpress={() => {
           setChoiceModal(!choiceModal);

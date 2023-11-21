@@ -28,10 +28,12 @@ import useStores from '../../../hooks/use-stores';
 import asyncStorageService from '../../../service/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery } from '@tanstack/react-query';
+import useCustomToast from '../../../hooks/useToast';
 
 const LoginScreen = () => {
   const [value, setvalue] = React.useState('');
-  const showToast = useToast();
+
+  const toast = useCustomToast();
   const uiStore: UIStore = useStores().uiStore;
   const isLogin = async () => {
     const token = await AsyncStorage.getItem('access_token');
@@ -60,35 +62,20 @@ const LoginScreen = () => {
           console.log(e);
           AsyncStorage.setItem('access_token', '123123123');
           asyncStorageService.setTypeAccount(e?.user?.displayName);
-          showToast.show({
-            title: 'xsxs',
-            placement: 'top',
-            duration: 3000,
-            render: () => (
-              <Toast type='success' message='Đăng nhập thành công !' />
-            ),
-          });
+
+          toast.show({ type: 'success', msg: 'Đăng nhập thành công !' });
+
           navigation.navigate(Screens.AuthenticatedNavigator as never);
         } else {
           uiStore.hideLoading();
 
-          showToast.show({
-            title: 'xsxs',
-            placement: 'top',
-            duration: 3000,
-            render: () => <Toast type='error' message='Đăng nhập thất bại !' />,
-          });
+          toast.show({ type: 'error', msg: 'Đăng nhập thất bại !' });
         }
       })
       .catch((err) => {
         console.log(err);
         uiStore.hideLoading();
-        showToast.show({
-          title: 'xsxs',
-          placement: 'top',
-          duration: 3000,
-          render: () => <Toast type='error' message='Đăng nhập thất bại !' />,
-        });
+        toast.show({ type: 'error', msg: 'Đăng nhập thất bại !' });
       });
   };
   const {

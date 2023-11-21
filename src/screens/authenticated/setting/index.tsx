@@ -16,6 +16,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import SessionStore from '../../../stores/session';
+import toast from '../../../components/Toast/Toast';
+import useCustomToast from '../../../hooks/useToast';
+
 const SettingScreen = () => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const navigation = useNavigation();
@@ -23,18 +26,27 @@ const SettingScreen = () => {
   const uiStore: UIStore = useStores().uiStore;
   const sessionStore: SessionStore = useStores().sessionStore;
 
+  const toast = useCustomToast();
+
   const handleLogout = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: Screens.AuthenticationNavigator as never }],
-    });
-    AsyncStorage.removeItem('access_token');
-    AsyncStorage.removeItem('type_account');
-    sessionStore.setData({ storage: [] });
+    setConfirmModal(!confirmModal);
+    auth()
+      .signOut()
+      .then(async (success) => {
+        sessionStore.setData({ storage: [] });
+        await AsyncStorage.removeItem('access_token');
+        await AsyncStorage.removeItem('type_account');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: Screens.AuthenticationNavigator as never }],
+        });
+      })
+      .catch((err) => toast.show({ type: 'error', msg: err }));
   };
   const email = auth().currentUser?.email;
   const getTypeOfAccount = async () => {
-    const typeAccount = (await auth().currentUser?.displayName) as any;
+    console.log(auth().currentUser);
+    const typeAccount = auth().currentUser?.displayName as any;
     setTypeOfAccount(typeAccount);
   };
   const isFocused = useIsFocused();

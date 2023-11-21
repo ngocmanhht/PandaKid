@@ -9,6 +9,7 @@ import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import { observer } from 'mobx-react';
 import SessionStore from '../../../stores/session';
+
 const ListWordByCate = observer(
   ({
     categoryName,
@@ -16,10 +17,10 @@ const ListWordByCate = observer(
     handleRemoveItem,
   }: {
     categoryName?: string;
-    handleAddItem?: (item: any) => void;
-    handleRemoveItem?: (item: any) => void;
+    handleAddItem: (item: any) => void;
+    handleRemoveItem: (item: any) => void;
   }) => {
-    const [data, setData] = React.useState([]);
+    const [data, setData] = React.useState<Array<any>>([]);
     const uiStore: UIStore = useStores().uiStore;
     const sessionStore: SessionStore = useStores().sessionStore;
     const getWordByCate = () => {
@@ -27,7 +28,7 @@ const ListWordByCate = observer(
       firestore()
         .collection('Category')
         .doc(categoryName)
-        .collection(categoryName)
+        .collection(String(categoryName))
         .orderBy('id', 'asc')
         .onSnapshot((querySnapshot) => {
           const users: any = [];
@@ -83,7 +84,10 @@ const ListWordByCate = observer(
                   source={{ uri: item?.url }}
                   wordName={item?.key}
                   onValueChange={(e) => {
-                    e === true ? handleAddItem(item) : handleRemoveItem(item);
+                    if (e === true) {
+                      return handleAddItem(item);
+                    }
+                    return handleRemoveItem(item);
                   }}
                 />
               </>

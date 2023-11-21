@@ -14,15 +14,12 @@ import { VStack } from 'native-base';
 import { randomColor, sizeHeight, sizeWidth } from '../../../utils/Utils';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
-import SearchInput from '../../../components/search-input';
 import { Icon } from '../../../assets/icons/const';
 import firestore from '@react-native-firebase/firestore';
-import { AnyIfEmpty } from 'react-redux';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
-import { ColorSpace } from 'react-native-reanimated';
 
 const HomeScreen = () => {
   const uiStore: UIStore = useStores().uiStore;
@@ -32,7 +29,7 @@ const HomeScreen = () => {
 
   const isBasicAccount = async () => {
     const typeAccount = await AsyncStorage.getItem('type_account');
-    if (JSON.parse(typeAccount) === 'Basic') {
+    if (JSON.parse(String(typeAccount)) === 'Basic') {
       return true;
     }
     return false;
@@ -66,7 +63,7 @@ const HomeScreen = () => {
         setData(users);
         uiStore.hideLoading();
       });
-    console.log(data);
+    // console.log(data);
 
     // Unsubscribe from events when no longer in use
     return () => subscriber();
@@ -83,8 +80,8 @@ const HomeScreen = () => {
         Screens.AddCategory as never,
         { data: data } as never
       );
-      const typeAccount = await AsyncStorage.getItem('type_account');
-      console.log(typeAccount);
+      // const typeAccount = await AsyncStorage.getItem('type_account');
+      // console.log(typeAccount);
     }
   };
   const loadMore = () => {};
@@ -122,7 +119,7 @@ const HomeScreen = () => {
                 onPress={() =>
                   navigation.navigate(
                     Screens.WordScreens as never,
-                    { title: item?.key, color: randomColor() } as any
+                    { title: item?.key, color: randomColor() } as never
                   )
                 }
                 activeOpacity={0.2}
@@ -142,5 +139,3 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({});

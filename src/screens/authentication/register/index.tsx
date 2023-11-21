@@ -20,12 +20,15 @@ import LongButton from '../../../components/Button/LongButton';
 import Toast from '../../../components/Toast/Toast';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
+import useCustomToast from '../../../hooks/useToast';
+import { firebaseError } from '../../../firebaseError/firebase-error';
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 const RegisterScreen = () => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
     getValues,
   } = useForm({
@@ -34,9 +37,12 @@ const RegisterScreen = () => {
       password: '',
       repassword: '',
     },
+    mode: 'onChange',
   });
   const navigation = useNavigation();
   const showToast = useToast();
+  const toast = useCustomToast();
+
   const onSubmit = (data: any) => {
     if (data?.password === data?.repassword) {
       auth()
@@ -46,40 +52,11 @@ const RegisterScreen = () => {
           e?.user.updateProfile({
             displayName: 'Basic',
           });
-          showToast.show({
-            title: 'xsxs',
-            placement: 'top',
-            duration: 3000,
-            render: () => (
-              <Toast type='success' message='Đăng ký thành công !' />
-            ),
-          });
+          toast.show({ type: 'success', msg: 'Đăng kí thành công' });
           navigation.navigate(Screens.LoginScreen as never);
         })
         .catch((error) => {
-          if (error?.code === 'auth/email-already-in-use') {
-            // console.log('That email address is already in use!');
-            showToast.show({
-              title: 'xsxs',
-              placement: 'top',
-              duration: 3000,
-              render: () => (
-                <Toast type='error' message='Email đã được sử dụng!' />
-              ),
-            });
-          }
-
-          if (error?.code === 'auth/invalid-email') {
-            // console.log('That email address is invalid!');
-            showToast.show({
-              title: 'xsxs',
-              placement: 'top',
-              duration: 3000,
-              render: () => (
-                <Toast type='error' message='Email không tồn tại !' />
-              ),
-            });
-          }
+          toast.show({ type: 'error', msg: firebaseError(error) });
         });
     }
   };
@@ -158,7 +135,7 @@ const RegisterScreen = () => {
             <Controller
               control={control}
               rules={{
-                required: true,
+                validate: (value) => value === watch('password'),
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomTextInput
@@ -179,18 +156,7 @@ const RegisterScreen = () => {
                   fontSize: fontSize(3),
                 }}
               >
-                * Hãy nhập xác nhập password
-              </Text>
-            )}
-            {getValues().password !== getValues().repassword && (
-              <Text
-                style={{
-                  color: 'red',
-                  alignSelf: 'flex-end',
-                  fontSize: fontSize(3),
-                }}
-              >
-                Mật khẩu xác nhận không khớp
+                * Hãy nhập đúng
               </Text>
             )}
 
