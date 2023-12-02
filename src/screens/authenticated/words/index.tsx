@@ -24,7 +24,7 @@ const WordScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState<Array<any>>([]);
   const [isVisibleModal, setIsVisibleModal] = React.useState(false);
   const [swiperIndex, setSwiperIndex] = React.useState(0);
   const { playSound, handlePlaySound } = useLogicWords();
@@ -32,17 +32,19 @@ const WordScreen = () => {
   const email = auth().currentUser?.email as any;
   const isBasicAccount = async () => {
     const typeAccount = await AsyncStorage.getItem('type_account');
-    if (JSON.parse(typeAccount) === 'Basic') {
+    if (JSON.parse(String(typeAccount)) === 'Basic') {
       return true;
     }
     return false;
   };
+
+  const params = route?.params as any;
   React.useEffect(() => {
     uiStore.showLoading();
     firestore()
       .collection('Category')
-      .doc(route?.params?.title)
-      .collection(route?.params?.title)
+      .doc(params?.title)
+      .collection(params?.title)
       .orderBy('id', 'desc')
       .onSnapshot((querySnapshot) => {
         const users: any = [];
@@ -70,7 +72,7 @@ const WordScreen = () => {
     } else {
       navigation.navigate(
         Screens.AddWord as never,
-        { data: data, title: route?.params?.title } as never
+        { data: data, title: params?.title } as never
       );
     }
   };
@@ -78,7 +80,7 @@ const WordScreen = () => {
     <Container backgroundSource={images.Background2}>
       <Header
         onBackPress={() => navigation.goBack()}
-        title={route?.params?.title}
+        title={params?.title}
         rightIconShown={true}
         rightIconSource={Icon.add}
         rightOnpress={handleAdd}
@@ -99,15 +101,14 @@ const WordScreen = () => {
               onPress={() => {
                 setSwiperIndex(index);
                 setIsVisibleModal(!isVisibleModal);
-                console.log(index);
               }}
               key={index}
               activeOpacity={0.2}
             >
               <BigCardWithVoice
                 key={index}
-                onPressVoiceIcon={() => {
-                  handlePlaySound(item);
+                onPressVoiceIcon={async () => {
+                  await handlePlaySound(item);
                 }}
                 title={item?.type === 'admin' ? item?.key : item?.name}
                 source={{ uri: item.url }}

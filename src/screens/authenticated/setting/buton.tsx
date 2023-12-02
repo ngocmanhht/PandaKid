@@ -25,7 +25,7 @@ const ExitButton = ({
         alignItems: 'flex-start',
         borderColor: 'white',
         borderRadius: sizeWidth(5),
-        backgroundColor: '#92CB76',
+        backgroundColor: '#A4B8E1',
       }}
     >
       <HStack alignItems={'center'} space={2}>

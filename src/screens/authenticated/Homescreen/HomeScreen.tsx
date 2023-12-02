@@ -1,10 +1,4 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
@@ -18,21 +12,21 @@ import { Icon } from '../../../assets/icons/const';
 import firestore from '@react-native-firebase/firestore';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
+import asyncStorageService from '../../../service/async-storage';
+import { RegisterData } from '../../../model/register';
+import { TypeAccount } from '../../../model/type-account';
+import SessionStore from '../../../stores/session';
 
 const HomeScreen = () => {
   const uiStore: UIStore = useStores().uiStore;
   const [data, setData] = React.useState<any>([]);
-  const [userData, setUserData] = React.useState<any>([]);
   const email = auth().currentUser?.email as any;
-
+  const sessionStore: SessionStore = useStores().sessionStore;
   const isBasicAccount = async () => {
-    const typeAccount = await AsyncStorage.getItem('type_account');
-    if (JSON.parse(String(typeAccount)) === 'Basic') {
-      return true;
-    }
-    return false;
+    const data = await firestore().collection('account').doc(email).get();
+    sessionStore.setTypeAccount({ typeAccount: data.data()?.typeAccount });
+    return data.data()?.typeAccount === TypeAccount.Basic;
   };
   React.useEffect(() => {
     // handleGetCategory();

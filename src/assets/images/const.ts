@@ -16,4 +16,5 @@ export const images = {
   warning: require('./warning.png'),
   update: require('./update.png'),
   updateBackground: require('./update-back-ground.png'),
+  loginFaceIdAvatar: require('./avatar1.png'),
 };

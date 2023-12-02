@@ -1,23 +1,34 @@
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Image,
+  InputModeOptions,
+} from 'react-native';
 import React from 'react';
 import { HStack } from 'native-base';
 import { sizeHeight, sizeWidth } from '../../utils/Utils';
 import { Icon } from '../../assets/icons/const';
 import TouchableOpacity from '../Button/TouchableOpacity';
 import { AnimatedTransform } from 'react-native-reanimated';
+
 interface TextInputProps {
   rightIconShow?: boolean;
   placeholder?: string;
   value?: string;
   onBlur?: any;
   onChangeText?: (e: any) => void;
+  inputMode?: InputModeOptions;
 }
+
 const CustomTextInput = ({
   rightIconShow = false,
   placeholder,
   value,
   onBlur,
   onChangeText,
+  inputMode,
 }: TextInputProps) => {
   const [hidden, setHidden] = React.useState(true);
   return (
@@ -26,11 +37,12 @@ const CustomTextInput = ({
         backgroundColor={'white'}
         w={sizeWidth(80)}
         h={sizeHeight(5)}
-        borderRadius={sizeWidth(6)}
+        borderRadius={sizeWidth(3)}
       >
         <TextInput
           autoCapitalize='none'
           value={value}
+          inputMode={inputMode}
           onBlur={onBlur}
           placeholderTextColor={'gray'}
           onChangeText={onChangeText}

@@ -33,4 +33,7 @@ export const Icon = {
   updateIcon1: require('./update-icon1.png'),
   updateIcon2: require('./update-icon2.png'),
   updateIcon3: require('./update-icon3.png'),
+  faceIdIcon: require('./face-id-icon.png'),
+  lockIcon: require('./lock-icon.png'),
+  grayFaceIdIcon: require('./face-id.png'),
 };

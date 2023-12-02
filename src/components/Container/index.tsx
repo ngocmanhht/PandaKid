@@ -23,7 +23,7 @@ const Container = ({
         style={{ flex: 1 }}
         source={backgroundSource || images.background}
       >
-        <SafeAreaView>{children}</SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>{children}</SafeAreaView>
       </ImageBackground>
     </>
   );

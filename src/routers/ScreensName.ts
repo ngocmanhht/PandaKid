@@ -15,4 +15,9 @@ export enum Screens {
   AddCategory = 'AddCategory',
   AddWord = 'AddWord',
   AddWordToStorage = 'AddWordToStorage',
+  GetCodeScreen = 'GetCodeScreen',
+  ResetPassword = 'ResetPassword',
+
+  ResetPasswordStack = 'ResetPasswordStack',
+  EnterPhoneNumber = 'EnterPhoneNumber',
 }

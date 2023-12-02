@@ -30,14 +30,16 @@ import firestore from '@react-native-firebase/firestore';
 const AddCategory = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [list, setList] = React.useState([]);
+
+  const params = route?.params as any;
+  const [list, setList] = React.useState<Array<any>>([]);
   const [addModalVisible, setAddModalVisible] = React.useState(false);
   const [choiceModal, setChoiceModal] = React.useState(false);
   const sessionStore: SessionStore = useStores().sessionStore;
   const uiStore: UIStore = useStores().uiStore;
   const [text, setText] = React.useState<any>();
   const [sesssionData, setSesssionData] = React.useState<any>();
-  const [data, setData] = React.useState<any>(route.params?.data);
+  const [data, setData] = React.useState<any>(params?.data);
 
   const handleClick = (item: any) => {
     const index = item?.id;

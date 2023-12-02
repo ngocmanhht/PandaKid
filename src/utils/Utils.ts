@@ -37,3 +37,6 @@ export const randomColor = () => {
   ];
   return color[Math.round(Math.random() * 10)];
 };
+
+export const convertPhoneNumberToViFormat = (phoneNumber: string) =>
+  phoneNumber.replace('0', '+84');

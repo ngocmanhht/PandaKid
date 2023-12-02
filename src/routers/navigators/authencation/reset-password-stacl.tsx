@@ -8,43 +8,28 @@ import { Screens } from '../../ScreensName';
 import LoginScreen from '../../../screens/authentication/login/LoginScreen';
 import RegisterScreen from '../../../screens/authentication/register';
 import GetCodeScreen from '../../../screens/authentication/register/get-code-screen';
-import ResetPassWordStack from './reset-password-stacl';
+import EnterPhoneNumber from '../../../screens/authentication/reset-password/enter-phone-number';
+import ResetPassword from '../../../screens/authentication/reset-password';
 
-const AuthenticationNavigatior = () => {
+const ResetPassWordStack = () => {
   const Stack = createStackNavigator();
 
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={Screens.IntroduceScreen}
-        component={IntroduceScreen}
+        name={Screens.EnterPhoneNumber}
+        component={EnterPhoneNumber}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={Screens.LoginScreen}
-        component={LoginScreen}
-        options={{ headerShown: false, gestureEnabled: false }}
-      />
-      <Stack.Screen
-        name={Screens.RegisterScreen}
-        component={RegisterScreen}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name={Screens.ResetPasswordStack}
-        component={ResetPassWordStack}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={Screens.GetCodeScreen}
-        component={GetCodeScreen}
+        name={Screens.ResetPassword}
+        component={ResetPassword}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
-export default AuthenticationNavigatior;
+export default ResetPassWordStack;
 
 const styles = StyleSheet.create({});

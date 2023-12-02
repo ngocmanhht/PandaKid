@@ -1,14 +1,13 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { Button, Image, StyleSheet, Switch, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
 import { VStack } from 'native-base';
 import { fontSize, sizeHeight, sizeWidth } from '../../../utils/Utils';
 import Header from '../../../components/header';
-import LongButton from '../../../components/Button/LongButton';
 import ExitButton from './buton';
 import ConfirmModal from '../../../components/confirm-modal';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../../routers/ScreensName';
 import { Icon } from '../../../assets/icons/const';
 import auth from '@react-native-firebase/auth';
@@ -16,17 +15,39 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UIStore from '../../../stores/ui';
 import useStores from '../../../hooks/use-stores';
 import SessionStore from '../../../stores/session';
-import toast from '../../../components/Toast/Toast';
 import useCustomToast from '../../../hooks/useToast';
+import TouchID from 'react-native-touch-id';
+import asyncStorageService from '../../../service/async-storage';
+import { useQuery } from '@tanstack/react-query';
+import { observer } from 'mobx-react';
+import { TypeAccount } from '../../../model/type-account';
+import { RegisterData } from '../../../model/register';
+import * as Keychain from 'react-native-keychain';
 
-const SettingScreen = () => {
+const SettingScreen = observer(() => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const navigation = useNavigation();
-  const [typeOfAccount, setTypeOfAccount] = React.useState<any>();
   const uiStore: UIStore = useStores().uiStore;
   const sessionStore: SessionStore = useStores().sessionStore;
-
+  const [isEnabled, setIsEnabled] = useState(false);
+  const { typeAccount } = sessionStore.typeAccount;
   const toast = useCustomToast();
+
+  const {} = useQuery({
+    queryKey: ['checkIsFaceIdEnabled'],
+    queryFn: () => asyncStorageService.getFaceIdIsEnabled(),
+    onSuccess: (data) => {
+      setIsEnabled(data);
+    },
+  });
+
+  const { data: isFaceIdEnabled, refetch } = useQuery({
+    queryKey: ['checkIsFaceIdEnabled'],
+    queryFn: () => asyncStorageService.getFaceIdIsEnabled(),
+    onSuccess: (success) => {
+      setIsEnabled(isFaceIdEnabled);
+    },
+  });
 
   const handleLogout = () => {
     setConfirmModal(!confirmModal);
@@ -43,18 +64,41 @@ const SettingScreen = () => {
       })
       .catch((err) => toast.show({ type: 'error', msg: err }));
   };
-  const email = auth().currentUser?.email;
-  const getTypeOfAccount = async () => {
-    console.log(auth().currentUser);
-    const typeAccount = auth().currentUser?.displayName as any;
-    setTypeOfAccount(typeAccount);
+
+  const { data } = useQuery<RegisterData>({
+    queryKey: ['getProfile'],
+    queryFn: () => asyncStorageService.getUserProfile(),
+  });
+
+  const authenticatedWithFaceId = async () => {
+    TouchID.isSupported()
+      .then(async (biometryType) => {
+        try {
+          const value = await TouchID.authenticate();
+          await asyncStorageService.setIsFaceIdIsEnabled(true);
+        } catch (e) {
+          console.log(e);
+        }
+      })
+      .catch((err) => {
+        toast.show({ type: 'error', msg: 'Thiết bị không hỗ trợ FaceID' });
+      });
   };
-  const isFocused = useIsFocused();
-  React.useEffect(() => {
-    if (isFocused) {
-      getTypeOfAccount();
+
+  const clearKeychain = async () => {
+    await Keychain.resetGenericPassword();
+    await asyncStorageService.setIsFaceIdIsEnabled(false);
+  };
+
+  const toggleSwitch = async () => {
+    setIsEnabled((previousState) => !previousState);
+
+    if (!isEnabled) {
+      // await storeAccountKeyChain();
+      return await authenticatedWithFaceId();
     }
-  }, [isFocused]);
+    return await clearKeychain();
+  };
 
   return (
     <Container backgroundSource={images.MainBackground}>
@@ -67,13 +111,15 @@ const SettingScreen = () => {
         borderWidth={3}
         borderColor={'white'}
         borderRadius={sizeWidth(2)}
-        backgroundColor={'#92CB76'}
+        backgroundColor={'#A4B8E1'}
         alignItems={'center'}
         space={2}
       >
         <Image
           source={
-            typeOfAccount === 'Basic' ? images.Avatar : images.PremiumAvatar
+            typeAccount === TypeAccount.Basic
+              ? images.Avatar
+              : images.PremiumAvatar
           }
           style={{ width: 100, height: 100, alignSelf: 'center' }}
           resizeMode='contain'
@@ -81,19 +127,74 @@ const SettingScreen = () => {
         <Text
           style={{ fontSize: fontSize(5), fontWeight: 'bold', color: 'white' }}
         >
-          {email?.slice(0, email?.indexOf('@'))}
+          {data?.displayName}
         </Text>
-        <Text style={{ fontSize: fontSize(4), color: 'white' }}>{email}</Text>
+        <Text style={{ fontSize: fontSize(4), color: 'white' }}>
+          {data?.email}
+        </Text>
       </VStack>
 
       <VStack margin={5} space={1}>
-        {typeOfAccount === 'Basic' && (
+        {typeAccount === TypeAccount.Basic && (
           <ExitButton
             onPress={() => uiStore.showDescriptionUpdateModal()}
             title={'Nâng cấp tài khoản'}
             source={Icon.update}
           />
         )}
+        <ExitButton
+          title={'Đổi mật khẩu'}
+          source={Icon.lockIcon}
+          onPress={() => setConfirmModal(!confirmModal)}
+        />
+
+        <View
+          style={{
+            width: sizeWidth(90),
+            borderWidth: 3,
+            alignSelf: 'center',
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            alignItems: 'flex-start',
+            borderColor: 'white',
+            borderRadius: sizeWidth(5),
+            backgroundColor: '#A4B8E1',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 5,
+              alignSelf: 'center',
+            }}
+          >
+            <Image
+              source={Icon.faceIdIcon}
+              style={{ width: 20, height: 20 }}
+              resizeMode='contain'
+            />
+            <Text
+              style={{
+                fontSize: fontSize(4),
+                fontWeight: 'bold',
+                color: 'white',
+              }}
+            >
+              {'Đăng nhập bằng FaceID'}
+            </Text>
+          </View>
+
+          <Switch
+            trackColor={{ false: '9B9B9B', true: '#81b0ff' }}
+            // thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor='#9B9B9B'
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
 
         <ExitButton
           title={'Đăng xuất'}
@@ -109,7 +210,7 @@ const SettingScreen = () => {
       />
     </Container>
   );
-};
+});
 
 export default SettingScreen;
 

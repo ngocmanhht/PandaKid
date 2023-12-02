@@ -1229,6 +1229,8 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.10.2):
     - React-Core
+  - RNKeychain (8.1.2):
+    - React-Core
   - RNPermissions (3.8.1):
     - React-Core
   - RNReanimated (3.2.0):
@@ -1352,6 +1354,7 @@ DEPENDENCIES:
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1488,6 +1491,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -1584,6 +1589,7 @@ SPEC CHECKSUMS:
   RNFBAuth: c869dede51535402b5ec0d1c2dd1306a7c1954cf
   RNFBFirestore: 396b5ee1086dc847d26edfc7ba11632f6897ca7a
   RNGestureHandler: f75d81410b40aaa99e71ae8f8bb7a88620c95042
+  RNKeychain: a65256b6ca6ba6976132cc4124b238a5b13b3d9c
   RNPermissions: b471c990fd2bc1c5550af807d9f4e0313ee0b081
   RNReanimated: c931b356bda56c0196110bdc462e48e4c2668dc3
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
