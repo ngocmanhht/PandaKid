@@ -145,7 +145,7 @@ const SettingScreen = observer(() => {
         <ExitButton
           title={'Đổi mật khẩu'}
           source={Icon.lockIcon}
-          onPress={() => setConfirmModal(!confirmModal)}
+          onPress={() => navigation.navigate(Screens.ChangePassword as never)}
         />
 
         <View

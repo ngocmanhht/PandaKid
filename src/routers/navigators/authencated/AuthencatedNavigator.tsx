@@ -19,6 +19,7 @@ import WordScreen from '../../../screens/authenticated/words';
 import AddCategory from '../../../screens/authenticated/add-category';
 import AddWord from '../../../screens/authenticated/add-word';
 import AddWordToStorage from '../../../screens/authenticated/add-word-to-storage';
+import SettingStack from './setting-stack';
 
 const BottomTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -163,8 +164,8 @@ const BottomTabNavigator = () => {
           },
           tabBarShowLabel: false,
         }}
-        name={Screens.SettingsScreen}
-        component={SettingScreen}
+        name={Screens.SettingStack}
+        component={SettingStack}
       />
     </Tab.Navigator>
   );

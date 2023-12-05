@@ -90,6 +90,15 @@ const LoginNormal = ({
           </Text>
         )}
 
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(Screens.ResetPasswordStack as never)
+          }
+          style={{ alignSelf: 'flex-end' }}
+        >
+          <Text style={{ fontSize: fontSize(3.5) }}>Quên mật khẩu?</Text>
+        </TouchableOpacity>
+
         <VStack space={5} style={{ top: sizeHeight(8) }}>
           <LongButton
             titleStyle={{ fontSize: fontSize(4.5), fontWeight: 'bold' }}

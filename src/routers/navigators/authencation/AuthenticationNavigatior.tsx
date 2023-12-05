@@ -8,7 +8,7 @@ import { Screens } from '../../ScreensName';
 import LoginScreen from '../../../screens/authentication/login/LoginScreen';
 import RegisterScreen from '../../../screens/authentication/register';
 import GetCodeScreen from '../../../screens/authentication/register/get-code-screen';
-import ResetPassWordStack from './reset-password-stacl';
+import ResetPassWordStack from './reset-password-stack';
 
 const AuthenticationNavigatior = () => {
   const Stack = createStackNavigator();

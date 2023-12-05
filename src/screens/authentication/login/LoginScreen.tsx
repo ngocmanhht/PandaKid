@@ -33,6 +33,7 @@ import LoginNormal from './login-normal';
 import LoginWithFaceId from './login-with-face-id';
 import firestore from '@react-native-firebase/firestore';
 import * as Keychain from 'react-native-keychain';
+import { firebaseError } from '../../../firebaseError/firebase-error';
 
 const LoginScreen = () => {
   const [value, setvalue] = React.useState('');
@@ -96,7 +97,7 @@ const LoginScreen = () => {
       .catch((err) => {
         console.log(err);
         uiStore.hideLoading();
-        toast.show({ type: 'error', msg: 'Đăng nhập thất bại !' });
+        toast.show({ type: 'error', msg: firebaseError(err) });
       });
   };
 
@@ -113,13 +114,13 @@ const LoginScreen = () => {
         } else {
           uiStore.hideLoading();
 
-          toast.show({ type: 'error', msg: 'Đăng nhập thất bại !' });
+          toast.show({ type: 'error', msg: 'Đăng nhập thất bại1 !' });
         }
       })
       .catch((err) => {
         console.log(err);
         uiStore.hideLoading();
-        toast.show({ type: 'error', msg: 'Đăng nhập thất bại !' });
+        toast.show({ type: 'error', msg: firebaseError(err) });
       });
   };
   const {
