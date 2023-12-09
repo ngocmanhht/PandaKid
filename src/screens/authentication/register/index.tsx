@@ -81,6 +81,13 @@ const RegisterScreen = () => {
 
     return phoneNumberRegex.test(phoneNumber);
   };
+  // Kiểm tra mật khẩu trong React Native và đảm bảo rằng nó phải chứa ít nhất 6 kí tự, bao gồm chữ cái, chữ số và kí tự đặc biệt
+  const validatePassword = (password: any) => {
+    // const emailRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$/;
+
+    return passwordRegex.test(password);
+  };
 
   const checkIsExistedEmail = async (email: string) => {
     const value = await firestore().collection('account').doc(email).get();
@@ -249,6 +256,7 @@ const RegisterScreen = () => {
               rules={{
                 required: true,
                 minLength: 6,
+                validate: (value) => validatePassword(value),
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomTextInput
