@@ -28,12 +28,12 @@ const DescriptionUpdateModal = observer(() => {
   const uiStore: UIStore = useStores().uiStore;
   const [confirmModal, setConfirmModal] = React.useState(false);
   const toast = useCustomToast();
-  const onConfirmBuy = () => {
+  const onConfirmBuy = async () => {
     auth().currentUser?.updateProfile({
       displayName: 'Premium',
     });
     uiStore.hideDescriptionUpdateModal();
-    asyncStorageService.setTypeAccount('Premium');
+    await asyncStorageService.setTypeAccount('Premium');
     toast.show({ type: 'success', msg: 'Thanh toán thành công' });
     setConfirmModal(!confirmModal);
   };
