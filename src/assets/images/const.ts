@@ -8,7 +8,6 @@ export const images = {
   background: require('./background.png'),
   MainBackground: require('./main-background.png'),
   Background2: require('./background2.png'),
-  Test: require('./test.png'),
   IntroduceScreen: require('./introduceScreen.png'),
   FailedScreen: require('./FailScreen.png'),
   Avatar: require('./avata.png'),

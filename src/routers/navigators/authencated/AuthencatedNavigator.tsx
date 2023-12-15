@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../../../screens/authenticated/Homescreen/HomeScreen';
@@ -38,7 +38,6 @@ const BottomTabNavigator = () => {
           borderRadius: 15,
           height: sizeHeight(8),
           ...styles.shadow,
-          // marginTop: 20
           // alignContent: 'center'
         },
       }}
@@ -49,7 +48,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <>
-                <VStack style={{ top: 15 }}>
+                <VStack style={{ top: Platform.OS === 'android' ? 0 : 15 }}>
                   <Image
                     style={styles.icon}
                     source={focused ? Icon.focusHouse : Icon.house}
@@ -82,7 +81,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <>
-                <VStack style={{ top: 15 }}>
+                <VStack style={{ top: Platform.OS === 'android' ? 0 : 15 }}>
                   <Image
                     style={styles.icon}
                     source={focused ? Icon.focusBook : Icon.book}
@@ -113,7 +112,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <>
-                <VStack style={{ top: 15 }}>
+                <VStack style={{ top: Platform.OS === 'android' ? 0 : 15 }}>
                   <Image
                     style={styles.icon}
                     source={focused ? Icon.focusStar : Icon.star}
@@ -143,7 +142,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <>
-                <VStack style={{ top: 15 }}>
+                <VStack style={{ top: Platform.OS === 'android' ? 0 : 15 }}>
                   <Image
                     style={styles.icon}
                     source={focused ? Icon.focusPanda : Icon.panda}

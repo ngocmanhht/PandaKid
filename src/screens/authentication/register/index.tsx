@@ -277,7 +277,7 @@ const RegisterScreen = () => {
                   fontSize: fontSize(3),
                 }}
               >
-                * Hãy nhập password
+                * Hãy nhập đúng
               </Text>
             )}
             <Controller

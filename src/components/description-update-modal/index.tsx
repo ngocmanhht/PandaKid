@@ -29,12 +29,15 @@ const DescriptionUpdateModal = observer(() => {
   const [confirmModal, setConfirmModal] = React.useState(false);
   const toast = useCustomToast();
   const onConfirmBuy = async () => {
-    auth().currentUser?.updateProfile({
-      displayName: 'Premium',
-    });
+    // auth().currentUser?.updateProfile({
+    //   displayName: 'Premium',
+    // });
     uiStore.hideDescriptionUpdateModal();
-    await asyncStorageService.setTypeAccount('Premium');
-    toast.show({ type: 'success', msg: 'Thanh toán thành công' });
+    // await asyncStorageService.setTypeAccount('Premium');
+    toast.show({
+      type: 'success',
+      msg: 'Tính năng này đang phát triển\n Vui lòng liên hệ admin',
+    });
     setConfirmModal(!confirmModal);
   };
   return (

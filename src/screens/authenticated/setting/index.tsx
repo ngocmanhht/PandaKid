@@ -1,4 +1,12 @@
-import { Button, Image, StyleSheet, Switch, Text, View } from 'react-native';
+import {
+  Button,
+  Image,
+  Linking,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+} from 'react-native';
 import React, { useState } from 'react';
 import Container from '../../../components/Container';
 import { images } from '../../../assets/images/const';
@@ -23,6 +31,7 @@ import { observer } from 'mobx-react';
 import { TypeAccount } from '../../../model/type-account';
 import { RegisterData } from '../../../model/register';
 import * as Keychain from 'react-native-keychain';
+import moment from 'moment';
 
 const SettingScreen = observer(() => {
   const [confirmModal, setConfirmModal] = React.useState(false);
@@ -78,6 +87,7 @@ const SettingScreen = observer(() => {
           await asyncStorageService.setIsFaceIdIsEnabled(true);
         } catch (e) {
           console.log(e);
+          setIsEnabled((previousState) => !previousState);
         }
       })
       .catch((err) => {
@@ -86,7 +96,7 @@ const SettingScreen = observer(() => {
   };
 
   const clearKeychain = async () => {
-    await Keychain.resetGenericPassword();
+    // await Keychain.resetGenericPassword();
     await asyncStorageService.setIsFaceIdIsEnabled(false);
   };
 
@@ -100,9 +110,17 @@ const SettingScreen = observer(() => {
     return await clearKeychain();
   };
 
+  const onPress = async () => {
+    const creatTime = moment().format('yyyyMMDDHHmmss').toString();
+    const url = `https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Version=2.1.0&vnp_Command=pay&vnp_TmnCode=N2UC4LTH&vnp_Amount=1806000&vnp_CreateDate=${creatTime}&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=Thanh+toan+don+hang1+%3A5&vnp_OrderType=other&vnp_ReturnUrl=https%3A%2F%2Fdomainmerchant.vn%2FReturnUrl&vnp_TxnRef=5&vnp_SecureHash=LFORJHTAXAVQHAMQORAQXQRGOOPRQGZE`;
+    await Linking.openURL(url);
+    console.log(creatTime);
+  };
+
   return (
     <Container backgroundSource={images.MainBackground}>
       <Header visible={false} title='Cài đặt' />
+      {/*<Button title={'test'} onPress={onPress} />*/}
       <VStack
         marginTop={sizeHeight(8)}
         w={'90%'}

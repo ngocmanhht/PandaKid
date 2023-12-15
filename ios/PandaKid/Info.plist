@@ -30,6 +30,16 @@
 				<string>app-1-99534190315-ios-e9753bc473598ab85170ae</string>
 			</array>
 		</dict>
+ 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>org.reactjs.native.example.PandaKid</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pandakid</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>

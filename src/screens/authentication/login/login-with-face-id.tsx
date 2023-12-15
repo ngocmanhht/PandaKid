@@ -35,6 +35,7 @@ const LoginWithFaceId = observer(
       try {
         const authenticate = await TouchID.authenticate();
         const keychainValue = await Keychain.getGenericPassword();
+        console.log(keychainValue);
         handleLoginWithFaceId(
           String(keychainValue?.username),
           String(keychainValue?.password)
