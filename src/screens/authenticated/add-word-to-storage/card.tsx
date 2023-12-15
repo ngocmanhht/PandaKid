@@ -33,7 +33,7 @@ const Card = ({
     >
       <HStack>
         <Image
-          source={source || images.Test}
+          source={source}
           style={{
             width: '90%',
             borderRadius: sizeWidth(4),
